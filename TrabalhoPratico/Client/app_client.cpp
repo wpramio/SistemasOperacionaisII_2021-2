@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
 
     Validations validations;
     string profile = (string)argv[1];
-    string serverAddress = (string)argv[2];
+    string ip = (string)argv[2]; //UPD uses IPv4
     string portStr = (string) argv[3];
 
     if(not validations.validateArguments(argc)) {
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     }
 
     //IP validation
-    if(not validations.validateIPv4(serverAddress)) {
+    if(not validations.validateIPv4(ip)) {
         return 1;
     }
 
@@ -30,4 +30,6 @@ int main(int argc, char *argv[]) {
     int port = stoi(portStr);
 
        
+    
+
 }

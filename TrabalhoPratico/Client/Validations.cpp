@@ -29,11 +29,11 @@ bool Validations::validateProfile(string profile) {
     return true;
 }
 
-bool Validations::validateIPv4(string serverAdress) {
+bool Validations::validateIPv4(string ip) {
 
     regex ipv4(IPV4_REGEX);
 
-    if( not regex_match(serverAdress, ipv4)) {
+    if( not regex_match(ip, ipv4)) {
         cerr << "ERROR - Invalid IPv4 adress. Use xxx.xxx.xxx.xx";
         return ERROR;
     }
