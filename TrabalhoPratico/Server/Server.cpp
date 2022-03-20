@@ -8,7 +8,7 @@ Server::Server()
     char buffer[MAXLINE];
     string hello = "Hello from server";
 
-    if (socketfd < 0)
+    if (this->socketfd < 0)
     {
 
         cout << " !> ERROR - Could not create socket";
@@ -24,29 +24,41 @@ Server::Server()
     cout << ">> SUCCESS - Socket created" << endl;
 
     // Bind - unique local name to the socket with descriptor socket
-    if (bind(socketfd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
+    if (bind(this->socketfd, (struct sockaddr *)&serverAddr, sizeof(this->serverAddr)) < 0)
     {
 
         cout << "!> ERROR - Binding error";
         exit(1);
     }
 
-    cout << ">> SUCCESS - Server is up on "
-         << " PORT: " << PORT << endl;
+    cout << ">> SUCCESS - Server is up on " << " PORT: " << PORT << endl;
     cout << ">> STATUS - Awaiting for clients..." << endl;
 
     int  n;
     socklen_t len;
 
-    len = sizeof(this->clientAddr); // len is value/resuslt
+    this->len = sizeof(this->clientAddr); 
 
-    n = recvfrom(socketfd, (char *)buffer, MAXLINE,
-                 MSG_WAITALL, (struct sockaddr *)&this->clientAddr,
-                 &len);
-    buffer[n] = '\0';
-    printf("Client : %s\n", buffer);
-    sendto(socketfd, (const char *)hello.c_str(), hello.length(),
-           MSG_CONFIRM, (const struct sockaddr *)&this->clientAddr,
-           len);
-    printf("Hello message sent.\n");
+}   
+
+string Server::receiveMessage() {
+    
+    char buffer[MAXLINE];
+
+    //MUTEX
+
+    int receiveLen = recvfrom(socketfd, (char *)buffer, MAXLINE, 
+        MSG_WAITALL, (struct sockaddr *) &this->serverAddr,
+        &len);
+
+    if(receiveLen < 0) {
+        
+        cout << "!> SERVER - Error receiving message";
+        exit(1);
+    }
+
+    buffer[receiveLen] = '\0';
+    
+    return buffer;
+
 }

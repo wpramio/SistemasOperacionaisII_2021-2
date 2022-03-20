@@ -31,11 +31,18 @@ int main(int argc, char *argv[]) {
     int port = stoi(portStr);
 
     
-    cout << "CHEGOU AQUI" << endl;
 
     Client *client = new Client(ip, port);
 
-    cout << "Passou" << endl;
+    while(true) {
+        string message;
+        cout << "Message: ";
 
+        getline(cin, message); 
+
+        client->sendMessage(message);
+
+        cout << message << endl;
+    }
 
 }

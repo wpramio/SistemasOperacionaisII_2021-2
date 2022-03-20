@@ -20,11 +20,13 @@ private:
     int server;
     struct sockaddr_in serverAddr;   
     struct sockaddr_in clientAddr;
+    socklen_t len; 
 
 
 public:
 
     Server();
+    string receiveMessage();
 
 
 };

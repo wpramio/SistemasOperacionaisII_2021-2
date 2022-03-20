@@ -1,6 +1,5 @@
 #include "Client.hpp"
 
-#define MAXLINE 1024
 //Constructor
 Client::Client(string ip, int port) {
 
@@ -9,10 +8,6 @@ Client::Client(string ip, int port) {
     descriptor that refers to that endpoint
     */
     this->socketfd = socket(AF_INET, SOCK_DGRAM, 0);
-
-    char buffer[MAXLINE];
-    string hello = "Hello from client";
-
 
     if(socketfd < 0) {
 
@@ -26,21 +21,43 @@ Client::Client(string ip, int port) {
     this->serverAddr.sin_family = AF_INET;
     this->serverAddr.sin_addr.s_addr = inet_addr(ip.c_str());
     this->serverAddr.sin_port = htons(port); //big endian
+    
+    this->len = sizeof(this->serverAddr); // len is value/resuslt
 
-    int  n;
-    socklen_t len;
+}
 
-    len = sizeof(this->serverAddr); // len is value/resuslt
+int Client::sendMessage(string message) {
 
-    sendto(socketfd, (const char *)hello.c_str(), hello.length(),
+    int sendtoReturn;
+    
+    sendtoReturn = sendto(socketfd, (const char *)message.c_str(), message.length(),
         MSG_CONFIRM, (const struct sockaddr *)&this->serverAddr,
-        len);
+        this->len);
 
-    n = recvfrom(socketfd, (char *)buffer, MAXLINE, 
-                MSG_WAITALL, (struct sockaddr *) &this->serverAddr,
-                &len);
-    buffer[n] = '\0';
-    printf("Server : %s\n", buffer);
+    return sendtoReturn;
+
+}
+
+int Client::receiveMessage() {
+
+    char buffer[MAXLINE];
+
+    //MUTEX
+
+    int receiveLen = recvfrom(socketfd, (char *)buffer, MAXLINE, 
+        MSG_WAITALL, (struct sockaddr *) &this->serverAddr,
+        &len);
+
+    buffer[receiveLen] = '\0';
+
+    this->message = buffer;
+    
+
+    return receiveLen;
+
+}
 
 
+string Client::getMessage() {
+    return this->message;
 }
