@@ -14,7 +14,7 @@ private:
 
 public:
     
-    Client(string message, int port);
+    Client(string ip, int port);
 
     int sendMessage(string message);
     int receiveMessage();

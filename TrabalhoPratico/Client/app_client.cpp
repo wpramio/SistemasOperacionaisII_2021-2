@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Validations.hpp"
+#include "Client.hpp"
 
 
 using namespace std;
@@ -29,7 +30,12 @@ int main(int argc, char *argv[]) {
 
     int port = stoi(portStr);
 
-       
     
+    cout << "CHEGOU AQUI" << endl;
+
+    Client *client = new Client(ip, port);
+
+    cout << "Passou" << endl;
+
 
 }
