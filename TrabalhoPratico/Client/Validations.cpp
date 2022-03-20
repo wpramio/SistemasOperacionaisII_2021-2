@@ -15,7 +15,7 @@ bool Validations::validateArguments(int argc) {
 bool Validations::validateProfile(string profile) {
 
     if(profile.at(0) != '@') {
-        cerr << "ERROR - Profile must star with '@'";
+        cerr << "ERROR - Profile must start with '@'";
         return ERROR;
     }
 

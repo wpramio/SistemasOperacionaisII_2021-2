@@ -2,6 +2,7 @@
 #include <string>
 #include "Validations.hpp"
 #include "Client.hpp"
+#include "ClientSession.hpp"
 
 
 using namespace std;
@@ -34,15 +35,7 @@ int main(int argc, char *argv[]) {
 
     Client *client = new Client(ip, port);
 
-    while(true) {
-        string message;
-        cout << "Message: ";
+    ClientSession clientSession = new ClientSession(profile, ip, portStr);
 
-        getline(cin, message); 
-
-        client->sendMessage(message);
-
-        cout << message << endl;
-    }
-
+    clientSession.session();
 }
