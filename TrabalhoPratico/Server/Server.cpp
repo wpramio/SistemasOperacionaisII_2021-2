@@ -2,7 +2,7 @@
 
 Server::Server()
 {
-
+    this->lastUuid = 0;
     this->socketfd = socket(AF_INET, SOCK_DGRAM, 0);
 
     char buffer[MAXLINE];
@@ -19,8 +19,6 @@ Server::Server()
     this->serverAddr.sin_port = htons(PORT);              // big endian
     this->serverAddr.sin_addr.s_addr = htonl(INADDR_ANY); // big endian
 
-    bzero(&(serverAddr.sin_zero), 8);
-
     cout << ">> SUCCESS - Socket created" << endl;
 
     // Bind - unique local name to the socket with descriptor socket
@@ -34,7 +32,6 @@ Server::Server()
     cout << ">> SUCCESS - Server is up on " << " PORT: " << PORT << endl;
     cout << ">> STATUS - Awaiting for clients..." << endl;
 
-    int  n;
     socklen_t len;
 
     this->len = sizeof(this->clientAddr); 
@@ -48,8 +45,8 @@ string Server::receiveMessage() {
     //MUTEX
 
     int receiveLen = recvfrom(socketfd, (char *)buffer, MAXLINE, 
-        MSG_WAITALL, (struct sockaddr *) &this->serverAddr,
-        &len);
+        0, (struct sockaddr *) &this->serverAddr,
+        &this->len);
 
     if(receiveLen < 0) {
         
@@ -60,5 +57,45 @@ string Server::receiveMessage() {
     buffer[receiveLen] = '\0';
     
     return buffer;
+
+}
+
+void Server::sendMessage(string message) {
+
+    sendto(socketfd, message.c_str(), message.length(), 
+        MSG_CONFIRM, (const struct sockaddr *) &this->clientAddr, this->len);
+
+}
+
+
+
+void Server::setNewClient(string username) {
+
+
+    int newUuid = this->getLastUuid() + 1;
+    Profile newProfile(username, newUuid);
+
+    this->clients.insert(pair<int, Profile>(newUuid, newProfile));
+
+    cout << "CRIADO";
+
+}
+
+int Server::getLastUuid() {
+    return this->lastUuid;
+}
+
+bool Server::clientAlreadyExists(string username) {
+
+    //Verifica se o usuario já esta registrado no servidor
+    for (auto user = this->clients.begin(); user != this->clients.end(); ++user) {
+        cout << user->second.getUserName();
+        if(user->second.getUserName() == username) {
+            return true;
+        }
+
+    }
+
+    return false;
 
 }

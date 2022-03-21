@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include "Validations.hpp"
-#include "Client.hpp"
 #include "ClientSession.hpp"
 
 
@@ -29,11 +28,5 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    int port = stoi(portStr);
-
-    
-
-    Client *client = new Client(ip, port);
-
-    ClientSession *clientSession = new ClientSession(profile, ip, portStr);
+    ClientSession clientSession(profile, ip, portStr);
 }

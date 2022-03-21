@@ -1,10 +1,41 @@
 #include "ClientSession.hpp"
 
+
 ClientSession::ClientSession(string profile, string ip, string port) {
 
-    thread sessionThread(session, profile);
-    thread feedThread(feed);
+    Client client(ip, stoi(port));
 
+    //Inicializa sessao no servidor
+    string sessionMsg = "SESSION:" + profile;
+
+    if(client.sendMessage(sessionMsg) < 0) {
+        cout << "!> ERROR - Session request" << endl;
+        exit(1);
+    }
+
+
+    if(client.receiveMessage() < 0) {
+        cout << "!> ERROR - Server response" << endl;
+        exit(1);
+    }
+
+    
+    //Pega o profile que iniciou a sessao
+    string sessionResponse = client.getMessage().substr(client.getMessage().find("::") + 1);   
+
+    //PNF == Profile not found
+    if(sessionResponse == "PNF") {
+        cout << "!> ERROR - Profile not found";
+        exit(1);
+    }
+
+    //Mais condiçoes
+
+    cout << ">>SUCCESS - Session started" << endl;
+    
+    //Inicia a sessao
+    thread sessionThread(session, profile, &client);
+    thread feedThread(feed);
 
     //Linhas de execucao
     sessionThread.join();
@@ -12,8 +43,8 @@ ClientSession::ClientSession(string profile, string ip, string port) {
 
 }
 
-
-void ClientSession::session(string profile) {
+//Mudar esse nome
+void ClientSession::session(string profile, Client *client) {
 
     cout << "Thread session" << endl;
 
@@ -48,10 +79,37 @@ void ClientSession::session(string profile) {
 
             //Send to server
 
+            //Inicializa sessao no servidor
+
+            //comando:prefil::perfil pra seguir
+
+            string followMsg = "FOLLOW:" + profile + "::" + content;
+
+            if(client->sendMessage(followMsg) < 0) {
+                cout << "!> ERROR - Follow request" << endl;
+                continue;
+            }
+
+            if(client->receiveMessage() < 0) {
+                cout << "!> SERVER ERROR - Server response" << endl;
+                exit(1);
+            }
+
+            //Pega o profile que iniciou a sessao
+            string followResponse = client->getMessage().substr(0, client->getMessage().find(":"));   
+
+            //PNF == Profile not found
+            if(followResponse == "FER") {
+                cout << "!> ERROR - Profile not found" << endl;
+                continue;
+            }
+
+
+            cout << "SUCCESS - Following " << content << endl;
+
         
         
-        }else if (command == "SEND")
-        {
+        }else if (command == "SEND") {
 
             if(content.length() > TWEETMAX) {
 
@@ -64,6 +122,11 @@ void ClientSession::session(string profile) {
             //Send to server
 
             
+        }else {
+
+            cout << "!> ERROR - Invalid command" << endl;
+            continue;
+
         }
     
 

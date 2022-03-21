@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <arpa/inet.h>
+#include <mutex>
 
 #define MAXLINE 1024
 
@@ -10,7 +11,6 @@ class Client {
 
 private: 
 
-
     int socketfd;   //socket file descriptor
     struct sockaddr_in serverAddr;
     string message;
@@ -19,7 +19,6 @@ private:
 public:
     
     Client(string ip, int port);
-
     int sendMessage(string message);
     int receiveMessage();
     string getMessage();

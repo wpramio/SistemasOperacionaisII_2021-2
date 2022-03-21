@@ -1,5 +1,7 @@
 #include "Client.hpp"
 
+mutex client_mutex;
+
 //Constructor
 Client::Client(string ip, int port) {
 
@@ -30,9 +32,10 @@ int Client::sendMessage(string message) {
 
     int sendtoReturn;
     
-    sendtoReturn = sendto(socketfd, (const char *)message.c_str(), message.length(),
-        MSG_CONFIRM, (const struct sockaddr *)&this->serverAddr,
-        this->len);
+    sendtoReturn = sendto(this->socketfd, message.c_str(), message.length(),
+        0, (const struct sockaddr *)&this->serverAddr,
+        sizeof(this->serverAddr));
+
 
     return sendtoReturn;
 
@@ -42,10 +45,13 @@ int Client::receiveMessage() {
 
     char buffer[MAXLINE];
 
-    //MUTEX
 
-    int receiveLen = recvfrom(socketfd, (char *)buffer, MAXLINE, 
-        MSG_WAITALL, (struct sockaddr *) &this->serverAddr,
+    //Checar se precisa
+    //lock guard garante que o processo nao fique bloqueado
+    lock_guard<mutex> guard(mutex);
+
+    int receiveLen = recvfrom(this->socketfd, (char *)buffer, MAXLINE, 
+        MSG_DONTWAIT, (struct sockaddr *) &this->serverAddr,
         &len);
 
     buffer[receiveLen] = '\0';
