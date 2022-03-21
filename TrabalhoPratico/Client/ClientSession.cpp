@@ -2,25 +2,26 @@
 
 ClientSession::ClientSession(string profile, string ip, string port) {
 
-    this->profile = profile;
-    this->ip = ip;
-    this->port = port;
+    thread sessionThread(session, profile);
+    thread feedThread(feed);
+
+
+    //Linhas de execucao
+    sessionThread.join();
+    feedThread.join();
 
 }
 
- {
 
-void ClientSession::session() {
+void ClientSession::session(string profile) {
+
+    cout << "Thread session" << endl;
 
     string message;
 
     while(true) {
 
-
-        //Das threads
-        //Uma recebe os novos tweets e outra envia
-
-        cout << "Tweet: ";
+        cout << "-> ";
         getline(cin, message); 
 
         //Pega o comando
@@ -52,7 +53,7 @@ void ClientSession::session() {
         }else if (command == "SEND")
         {
 
-            if(content > TWEETMAX) {
+            if(content.length() > TWEETMAX) {
 
                 cout << "!> ERROR - Max tweet size is 280" << endl;
                 continue;
@@ -68,4 +69,9 @@ void ClientSession::session() {
 
     }
 
+}
+
+
+void ClientSession::feed() {
+    cout << "\nThread feed" << endl;
 }

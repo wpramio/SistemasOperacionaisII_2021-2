@@ -35,7 +35,5 @@ int main(int argc, char *argv[]) {
 
     Client *client = new Client(ip, port);
 
-    ClientSession clientSession = new ClientSession(profile, ip, portStr);
-
-    clientSession.session();
+    ClientSession *clientSession = new ClientSession(profile, ip, portStr);
 }
