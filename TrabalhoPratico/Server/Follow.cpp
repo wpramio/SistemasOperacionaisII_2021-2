@@ -15,15 +15,14 @@ void Follow::start(Server *server, string myUser, string toFollow, Socket sock) 
     int toFollowUuid = server->getProfileUuid(toFollow);
 
     //Recupera os perfis
-    Profile myUserProf = server->getProfile(myUserUuid);
-    Profile toFollowProf = server->getProfile(toFollowUuid);
+    Profile *myUserProf = server->getProfile(myUserUuid);
+    Profile *toFollowProf = server->getProfile(toFollowUuid);
 
     //Adiciona em seguindo
-    myUserProf.setFollowing(toFollowProf, sock);
+    myUserProf->setFollowing(toFollowProf, sock);
+
     //Adiciona em seguidor
-    toFollowProf.setFollowers(myUserProf);
-
-
+    toFollowProf->setFollowers(myUserProf);
 
 
 }

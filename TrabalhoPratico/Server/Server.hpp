@@ -39,14 +39,14 @@ public:
 
     Server();
     int getLastUuid();
+    void setLastUuid();
     string receiveMessage();
     void sendMessage(string message); 
     int setNewClient(string username);
     void startClientSession(int clientUuid);
     bool clientAlreadyExists(string username);
     int getProfileUuid(string username);
-    Profile getProfile(int uuid);
+    Profile* getProfile(int uuid);
     Socket getConnection();
-
 
 };

@@ -3,15 +3,15 @@
 
 std::mutex mtx;
 
-Server::Server()
-{
+Server::Server() {
+
+
     this->lastUuid = 0;
     this->socketfd = socket(AF_INET, SOCK_DGRAM, 0);
 
     char buffer[MAXLINE];
 
-    if (this->socketfd < 0)
-    {
+    if (this->socketfd < 0) {
 
         cout << " !> ERROR - Could not create socket";
         exit(1);
@@ -24,8 +24,7 @@ Server::Server()
     cout << ">> SUCCESS - Socket created" << endl;
 
     // Bind - unique local name to the socket with descriptor socket
-    if (bind(this->socketfd, (struct sockaddr *)&serverAddr, sizeof(this->serverAddr)) < 0)
-    {
+    if (bind(this->socketfd, (struct sockaddr *)&serverAddr, sizeof(this->serverAddr)) < 0) {
 
         cout << "!> ERROR - Binding error";
         exit(1);
@@ -70,11 +69,20 @@ void Server::sendMessage(string message) {
 
 int Server::setNewClient(string username) {
 
-    int newUuid = this->getLastUuid() + 1;
+    this->setLastUuid();
+    int newUuid = this->getLastUuid();
 
     Profile newProfile(username, newUuid);
-
+    
     this->clients.insert(pair<int, Profile>(newUuid, newProfile));
+
+    for(auto it = this->clients.begin(); it != this->clients.end(); ++it) {
+
+        cout << it->second.getUserName();
+        cout << endl;
+    }
+
+    cout << "set new client" << endl;
 
     return newUuid;
 
@@ -91,7 +99,6 @@ bool Server::clientAlreadyExists(string username) {
      
         if(user->second.getUserName() == username) {
 
-            cout << "ENTROU AQUI " << endl;
             return true;
         }
 
@@ -124,10 +131,17 @@ int Server::getProfileUuid(string username) {
 
 }
 
-Profile Server::getProfile(int uuid) {
+void Server::setLastUuid() {
+
+    this->lastUuid += 1;
+
+}
+
+Profile* Server::getProfile(int uuid) {
 
     auto item = clients.find(uuid);
-    return item->second;
+
+    return &item->second;
 
 }
 

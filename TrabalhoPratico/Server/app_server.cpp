@@ -18,6 +18,7 @@ int main() {
         string command = message.substr(0, message.find(":"));
         //Pega o username
         string content = message.substr(message.find(":") + 1);
+
          
         int clientUuid;
 
@@ -43,6 +44,7 @@ int main() {
         }else if(command == "SEND") {
 
         }
+
 
 
     }

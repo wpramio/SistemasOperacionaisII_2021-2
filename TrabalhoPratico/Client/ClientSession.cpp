@@ -23,7 +23,8 @@ ClientSession::ClientSession(string profile, string ip, string port) {
     //Pega o profile que iniciou a sessao
     string sessionResponse = client.getMessage();   
 
-    
+    cout << endl << sessionResponse << endl;
+
     if(sessionResponse == "There are already 2 active sessions") {
         cout << "!> ERROR - Too many sessions at the same time";
         exit(1);
@@ -104,8 +105,15 @@ void ClientSession::session(string profile, Client *client) {
                 continue;
             }
 
+            cout << "!!! " << followResponse << endl;
 
-            cout << "SUCCESS - Following " << content << endl;
+            if(followResponse == "You already follows this profile") {
+                cout << "!> ERROR - You already follows this profile" << endl;
+                continue;
+            }
+
+
+            cout << "SUCCESS - " << followResponse << endl;
 
         
         

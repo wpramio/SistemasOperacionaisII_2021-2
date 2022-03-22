@@ -14,6 +14,7 @@ void Session::start(Server *server, string command, string content) {
             
             clientUuid = server->getProfileUuid(content);
             auto client = server->getProfile(clientUuid);
+
             //Tenta iniciar a sessao
             //Incrementa seções ativas
             if(!client.setActiveSession()) {
@@ -24,17 +25,18 @@ void Session::start(Server *server, string command, string content) {
                 return;
             
             }
-
             //Inicia uma nova sessao
             server->startClientSession(clientUuid);
+            server->sendMessage("Logged in");
         
         }else {
 
+            
             clientUuid = server->setNewClient(content);
 
             server->startClientSession(clientUuid);
 
-            cout <<"CHEGOU AQUI" << endl;
+            
             server->sendMessage("Logged in");
         }
 }

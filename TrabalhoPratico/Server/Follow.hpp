@@ -11,5 +11,4 @@ public:
     Follow();
     void start(Server *server, string myUser, string toFollow, Socket sock); 
 
-
 };

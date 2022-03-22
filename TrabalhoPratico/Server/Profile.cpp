@@ -1,5 +1,12 @@
 #include "Profile.hpp"
 
+Profile::Profile(string username, int uuid) {
+
+    this->uuid = uuid;
+    this->username = username;
+    this->activeSessions = 0;
+
+}
 string Profile::getUserName() {
     return this->username;
 }
@@ -9,40 +16,33 @@ int Profile::getUuid() {
 }
 
 
-Profile::Profile(string username, int uuid) {
 
-    this->uuid = uuid;
-    this->username = username;
-    this->activeSessions = 0;
+void Profile::setFollowers(Profile *followMe) {
 
-}
-
-void Profile::setFollowers(Profile followMe) {
-
-    this->followers.push_back(followMe);
-
-
-}
-
-void Profile::setFollowing(Profile toFollow, Socket sock) {
-
-
-    //Testar se já não esta seguindo
-    for (auto user = this->following.begin(); user != this->following.end(); ++user) {
-
-       if(user->getUserName() == toFollow.getUserName()) {
-           //Já segue
-           
-           return;
-       }
-
+    if(followMe->isFollowing(this)) {
+        return;    
     }
 
-    //Nao sei se isso ta certo
-    this->following.push_back(toFollow);
+    this->followers.push_back(*followMe);
 
-    sock.sendMessage("Following " + toFollow.getUserName());
+    cout << "N3 " << this->followers.size() << endl;
 
+}
+
+void Profile::setFollowing(Profile *toFollow, Socket sock) {
+
+    //Testar se já não esta seguindo
+    cout << " N " << this->following.size() << endl;
+
+    if(this->isFollowing(toFollow)) {
+        sock.sendMessage("You already follows this profile");
+        return;
+    }
+
+    this->following.push_back(*toFollow);
+    cout << " N2 " << this->following.size() << endl;
+
+    sock.sendMessage("Following " + toFollow->getUserName());
 }
 
 int Profile::getActiveSessions() {
@@ -63,6 +63,38 @@ bool Profile::setActiveSession() {
     
     }
     cout << endl << this->activeSessions << endl;
+
+    return false;
+
+}
+
+bool Profile::followingAlreadyExists(Profile myUser, string toFollowUserName) {
+
+    //Verifica se o usuario já esta registrado no servidor
+    for (auto user = this->following.begin(); user != this->following.end(); ++user) {
+        
+        cout << user->getUserName() << endl;
+        if(user->getUserName() == toFollowUserName) {
+            return true;
+        }
+
+    }
+
+    return false;
+
+
+}
+
+bool Profile::isFollowing(Profile *toFollow) {
+
+
+    for (auto user = this->following.begin(); user != this->following.end(); ++user) {
+
+        if(user->getUserName() == toFollow->getUserName()) {
+            return true;
+        }
+
+    }
 
     return false;
 
