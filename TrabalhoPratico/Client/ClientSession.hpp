@@ -15,7 +15,7 @@ public:
     
     //Static for using in threads
     static void session(string profile, Client *client) ;
-    static void feed();
+    static void feed(Client *client) ;
 
     
 

@@ -35,7 +35,7 @@ ClientSession::ClientSession(string profile, string ip, string port) {
     
     //Inicia a sessao
     thread sessionThread(session, profile, &client);
-    thread feedThread(feed);
+    thread feedThread(feed, &client);
 
     //Linhas de execucao
     sessionThread.join();
@@ -98,8 +98,8 @@ void ClientSession::session(string profile, Client *client) {
             //Pega o profile que iniciou a sessao
             string followResponse = client->getMessage().substr(0, client->getMessage().find(":"));   
 
-            //PNF == Profile not found
-            if(followResponse == "FER") {
+            //PNF == FOLLOW ERROR
+            if(followResponse == "PNF") {
                 cout << "!> ERROR - Profile not found" << endl;
                 continue;
             }
@@ -135,6 +135,23 @@ void ClientSession::session(string profile, Client *client) {
 }
 
 
-void ClientSession::feed() {
+void ClientSession::feed(Client *client) {
     cout << "\nThread feed" << endl;
+
+    while (true) {
+        //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+        if (client->nonBlockingReceiveMessage() < 0) {
+            continue;
+        }
+
+        string message = client->getMessage();
+        string commandStr = message.substr(0, message.find(","));
+
+
+        cout << "MESSAGE FROM FEED - " << message << endl;
+    }
+//         if (commandStr != "notify") {
+//             continue;
+//         }
 }

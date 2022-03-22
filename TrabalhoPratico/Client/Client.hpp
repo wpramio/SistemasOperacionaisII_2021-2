@@ -15,11 +15,12 @@ private:
     struct sockaddr_in serverAddr;
     string message;
     socklen_t len;
-
+    
 public:
     
     Client(string ip, int port);
     int sendMessage(string message);
+    int nonBlockingReceiveMessage(); 
     int receiveMessage();
     string getMessage();
 

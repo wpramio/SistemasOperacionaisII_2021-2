@@ -1,6 +1,6 @@
 #include "Client.hpp"
 
-mutex client_mutex;
+std::mutex mtx;
 
 //Constructor
 Client::Client(string ip, int port) {
@@ -48,11 +48,13 @@ int Client::receiveMessage() {
 
     //Checar se precisa
     //lock guard garante que o processo nao fique bloqueado
-    lock_guard<mutex> guard(mutex);
+    mtx.lock();
 
     int receiveLen = recvfrom(this->socketfd, (char *)buffer, MAXLINE, 
         MSG_DONTWAIT, (struct sockaddr *) &this->serverAddr,
         &len);
+
+    mtx.unlock();
 
     buffer[receiveLen] = '\0';
 
@@ -61,6 +63,27 @@ int Client::receiveMessage() {
 
     return receiveLen;
 
+}
+
+
+int Client::nonBlockingReceiveMessage() {
+    
+	char buffer[MAXLINE];
+	int len = sizeof(sockaddr_in);
+
+	mtx.lock();
+
+	 int receiveLen = recvfrom(this->socketfd, (char *)buffer, MAXLINE, 
+        MSG_DONTWAIT, (struct sockaddr *) &this->serverAddr, (socklen_t*) &len);
+
+    mtx.unlock();
+    
+    //Nao sei explicar pq assim funciona e sem o -1 nao
+    buffer[receiveLen + 1] = '\0';
+
+    this->message = buffer;
+
+	return receiveLen;
 }
 
 
