@@ -42,7 +42,7 @@ public:
     string receiveMessage();
     void sendMessage(string message); 
     int setNewClient(string username);
-    bool startClientSession(int clientUuid);
+    void startClientSession(int clientUuid);
     bool clientAlreadyExists(string username);
     int getProfileUuid(string username);
     Profile getProfile(int uuid);

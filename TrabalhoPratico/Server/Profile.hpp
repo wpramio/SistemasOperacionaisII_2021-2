@@ -3,6 +3,8 @@
 #include <string>
 #include <list>
 
+#include "Socket.hpp"
+
 using namespace std;
 
 
@@ -12,6 +14,8 @@ private:
 
     int uuid;
     string username;
+
+    //Nao sei se isso ta certo
     list<Profile> followers;
     list<Profile> following;
     int activeSessions;
@@ -25,6 +29,6 @@ public:
     int getActiveSessions();
     bool setActiveSession();
     void setFollowers(Profile followMe);
-    void setFollowing(Profile followYou);
+    void setFollowing(Profile followYou, Socket sock);
 
 };

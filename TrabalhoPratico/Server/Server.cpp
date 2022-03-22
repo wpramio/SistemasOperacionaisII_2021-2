@@ -90,6 +90,8 @@ bool Server::clientAlreadyExists(string username) {
     for (auto user = this->clients.begin(); user != this->clients.end(); ++user) {
      
         if(user->second.getUserName() == username) {
+
+            cout << "ENTROU AQUI " << endl;
             return true;
         }
 
@@ -99,12 +101,10 @@ bool Server::clientAlreadyExists(string username) {
 
 }
 
-bool Server::startClientSession(int clientUuid) {
+void Server::startClientSession(int clientUuid) {
 
     auto item = clients.find(clientUuid);
     item->second.setActiveSession();
-
-    return true;
     
 }
 

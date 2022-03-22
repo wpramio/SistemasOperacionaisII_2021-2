@@ -45,13 +45,12 @@ int Client::receiveMessage() {
 
     char buffer[MAXLINE];
 
-
     //Checar se precisa
     //lock guard garante que o processo nao fique bloqueado
     mtx.lock();
 
     int receiveLen = recvfrom(this->socketfd, (char *)buffer, MAXLINE, 
-        MSG_DONTWAIT, (struct sockaddr *) &this->serverAddr,
+        0, (struct sockaddr *) &this->serverAddr,
         &len);
 
     mtx.unlock();
@@ -59,7 +58,6 @@ int Client::receiveMessage() {
     buffer[receiveLen] = '\0';
 
     this->message = buffer;
-    
 
     return receiveLen;
 
@@ -73,13 +71,12 @@ int Client::nonBlockingReceiveMessage() {
 
 	mtx.lock();
 
-	 int receiveLen = recvfrom(this->socketfd, (char *)buffer, MAXLINE, 
+	 int receiveLen = recvfrom(this->socketfd, buffer, MAXLINE, 
         MSG_DONTWAIT, (struct sockaddr *) &this->serverAddr, (socklen_t*) &len);
+    
+    bzero(buffer, MAXLINE);
 
     mtx.unlock();
-    
-    //Nao sei explicar pq assim funciona e sem o -1 nao
-    buffer[receiveLen + 1] = '\0';
 
     this->message = buffer;
 

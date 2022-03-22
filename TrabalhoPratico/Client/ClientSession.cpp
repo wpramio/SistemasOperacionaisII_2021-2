@@ -21,11 +21,11 @@ ClientSession::ClientSession(string profile, string ip, string port) {
 
     
     //Pega o profile que iniciou a sessao
-    string sessionResponse = client.getMessage().substr(client.getMessage().find("::") + 1);   
+    string sessionResponse = client.getMessage();   
 
-    //PNF == Profile not found
-    if(sessionResponse == "PNF") {
-        cout << "!> ERROR - Profile not found";
+    
+    if(sessionResponse == "There are already 2 active sessions") {
+        cout << "!> ERROR - Too many sessions at the same time";
         exit(1);
     }
 
@@ -96,10 +96,10 @@ void ClientSession::session(string profile, Client *client) {
             }
 
             //Pega o profile que iniciou a sessao
-            string followResponse = client->getMessage().substr(0, client->getMessage().find(":"));   
+            string followResponse = client->getMessage();   
 
             //PNF == FOLLOW ERROR
-            if(followResponse == "PNF") {
+            if(followResponse == "Profile Not Found") {
                 cout << "!> ERROR - Profile not found" << endl;
                 continue;
             }
@@ -148,6 +148,10 @@ void ClientSession::feed(Client *client) {
         string message = client->getMessage();
         string commandStr = message.substr(0, message.find(","));
 
+
+        if(message != "Profile Not Found") {
+            continue;
+        }
 
         cout << "MESSAGE FROM FEED - " << message << endl;
     }

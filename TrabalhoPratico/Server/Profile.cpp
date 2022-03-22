@@ -24,9 +24,24 @@ void Profile::setFollowers(Profile followMe) {
 
 }
 
-void Profile::setFollowing(Profile followYou) {
+void Profile::setFollowing(Profile toFollow, Socket sock) {
 
-    this->following.push_back(followYou);
+
+    //Testar se já não esta seguindo
+    for (auto user = this->following.begin(); user != this->following.end(); ++user) {
+
+       if(user->getUserName() == toFollow.getUserName()) {
+           //Já segue
+           
+           return;
+       }
+
+    }
+
+    //Nao sei se isso ta certo
+    this->following.push_back(toFollow);
+
+    sock.sendMessage("Following " + toFollow.getUserName());
 
 }
 

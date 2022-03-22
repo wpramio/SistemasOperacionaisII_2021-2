@@ -1,4 +1,5 @@
 #include <string>
+#include <string.h> //For bzero
 #include <iostream>
 #include <arpa/inet.h>
 #include <mutex>

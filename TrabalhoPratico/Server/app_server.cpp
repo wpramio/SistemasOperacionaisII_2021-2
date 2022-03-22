@@ -12,7 +12,6 @@ int main() {
     while(true) {
 
         string message = server.receiveMessage();
-
         //Pega o socket que enviou a mensagem
         Socket sock = server.getConnection();
         //Pega o comando
@@ -38,7 +37,7 @@ int main() {
 
             cout << "SEGUIR " << myUser << " " << toFollow << endl;
             
-            follow.start(&server, myUser, toFollow);
+            follow.start(&server, myUser, toFollow, sock);
 
 
         }else if(command == "SEND") {
