@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <string>
 #include <list>
@@ -22,11 +23,8 @@ public:
     string getUserName();
     int getUuid();
     int getActiveSessions();
-    void setActiveSession();
+    bool setActiveSession();
     void setFollowers(Profile followMe);
     void setFollowing(Profile followYou);
-
-
-
 
 };

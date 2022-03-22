@@ -1,4 +1,8 @@
 #include "Server.hpp"
+#include "Socket.hpp"
+#include "Session.hpp"
+#include "Follow.hpp"
+
 
 int main() {
 
@@ -8,34 +12,33 @@ int main() {
     while(true) {
 
         string message = server.receiveMessage();
-        cout << message << endl;
 
-
+        //Pega o socket que enviou a mensagem
+        Socket sock = server.getConnection();
+        //Pega o comando
         string command = message.substr(0, message.find(":"));
-        cout << command << endl;
-        string content;
-        cout << content << endl;
+        //Pega o username
+        string content = message.substr(message.find(":") + 1);
+         
+        int clientUuid;
 
         if(command == "SESSION") {
 
+            Session session;
+            session.start(&server, command, content);
 
-            cout << "CHEGOU";
-            //Pega o username
-            content = message.substr(message.find(":") + 1);
-
-            if(server.clientAlreadyExists(content)) {
-                cout << "Já existe" << endl;
-                //Incrementa seções ativas
-            }
-
-            server.setNewClient(content);
-
-
-            server.sendMessage("SUCESS");
+            continue;
 
 
         }else if(command == "FOLLOW") {
 
+            Follow follow;
+            string myUser = content.substr(0, content.find("::"));
+            string toFollow = content.substr(content.find("::") + 2);
+
+            cout << "SEGUIR " << myUser << " " << toFollow << endl;
+            
+            follow.start(&server, myUser, toFollow);
 
 
         }else if(command == "SEND") {

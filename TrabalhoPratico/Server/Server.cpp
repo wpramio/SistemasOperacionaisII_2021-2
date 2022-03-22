@@ -1,4 +1,7 @@
 #include "Server.hpp"
+#include "Profile.hpp"
+
+std::mutex mtx;
 
 Server::Server()
 {
@@ -6,7 +9,6 @@ Server::Server()
     this->socketfd = socket(AF_INET, SOCK_DGRAM, 0);
 
     char buffer[MAXLINE];
-    string hello = "Hello from server";
 
     if (this->socketfd < 0)
     {
@@ -33,7 +35,6 @@ Server::Server()
     cout << ">> STATUS - Awaiting for clients..." << endl;
 
     socklen_t len;
-
     this->len = sizeof(this->clientAddr); 
 
 }   
@@ -45,8 +46,7 @@ string Server::receiveMessage() {
     //MUTEX
 
     int receiveLen = recvfrom(socketfd, (char *)buffer, MAXLINE, 
-        0, (struct sockaddr *) &this->serverAddr,
-        &this->len);
+        0, (struct sockaddr *) &this->clientAddr,   &this->len);
 
     if(receiveLen < 0) {
         
@@ -62,22 +62,21 @@ string Server::receiveMessage() {
 
 void Server::sendMessage(string message) {
 
+    mtx.lock();
     sendto(socketfd, message.c_str(), message.length(), 
         MSG_CONFIRM, (const struct sockaddr *) &this->clientAddr, this->len);
-
+    mtx.unlock();
 }
 
-
-
-void Server::setNewClient(string username) {
-
+int Server::setNewClient(string username) {
 
     int newUuid = this->getLastUuid() + 1;
+
     Profile newProfile(username, newUuid);
 
     this->clients.insert(pair<int, Profile>(newUuid, newProfile));
 
-    cout << "CRIADO";
+    return newUuid;
 
 }
 
@@ -89,7 +88,7 @@ bool Server::clientAlreadyExists(string username) {
 
     //Verifica se o usuario já esta registrado no servidor
     for (auto user = this->clients.begin(); user != this->clients.end(); ++user) {
-        cout << user->second.getUserName();
+     
         if(user->second.getUserName() == username) {
             return true;
         }
@@ -98,4 +97,40 @@ bool Server::clientAlreadyExists(string username) {
 
     return false;
 
+}
+
+bool Server::startClientSession(int clientUuid) {
+
+    auto item = clients.find(clientUuid);
+    item->second.setActiveSession();
+
+    return true;
+    
+}
+
+int Server::getProfileUuid(string username) {
+
+    int uuid;
+
+    for (auto user = this->clients.begin(); user != this->clients.end(); ++user) {
+
+        if(user->second.getUserName() == username) {
+            uuid = user->second.getUuid();
+            break;
+        }
+    }
+
+    return uuid;
+
+}
+
+Profile Server::getProfile(int uuid) {
+
+    auto item = clients.find(uuid);
+    return item->second;
+
+}
+
+Socket Server::getConnection() {
+	return Socket(this->socketfd, this->clientAddr);
 }

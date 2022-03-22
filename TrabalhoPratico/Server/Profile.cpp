@@ -31,9 +31,24 @@ void Profile::setFollowing(Profile followYou) {
 }
 
 int Profile::getActiveSessions() {
+
     return this->activeSessions;
 }
 
-void Profile::setActiveSession() {
-    this->activeSessions++;
+//Retorna true se é possivel criar uma nova sessao
+//False, caso contrario
+
+bool Profile::setActiveSession() {
+
+    if(getActiveSessions() < 2) {
+
+        this->activeSessions++;
+
+        return true;
+    
+    }
+    cout << endl << this->activeSessions << endl;
+
+    return false;
+
 }

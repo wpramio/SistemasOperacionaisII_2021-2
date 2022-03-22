@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <sys/types.h>
@@ -6,9 +8,13 @@
 #include <arpa/inet.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <mutex>
+
+#include <map>
+
 
 #include "Profile.hpp"
-#include <map>
+#include "Socket.hpp"
 
 #define PORT 8888
 #define MAXLINE 1024
@@ -35,10 +41,12 @@ public:
     int getLastUuid();
     string receiveMessage();
     void sendMessage(string message); 
-    void setNewClient(string username);
-    bool startClientSession();
+    int setNewClient(string username);
+    bool startClientSession(int clientUuid);
     bool clientAlreadyExists(string username);
-    
+    int getProfileUuid(string username);
+    Profile getProfile(int uuid);
+    Socket getConnection();
 
 
 };
