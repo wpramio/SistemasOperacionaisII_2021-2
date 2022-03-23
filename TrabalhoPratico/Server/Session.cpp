@@ -17,7 +17,7 @@ void Session::start(Server *server, string command, string content) {
 
             //Tenta iniciar a sessao
             //Incrementa seções ativas
-            if(!client.setActiveSession()) {
+            if(!client->setActiveSession()) {
                 
                 cout << "There are already 2 active sessions" << endl;
                 //Avisa que não é possivel iniciar uma nova sessao

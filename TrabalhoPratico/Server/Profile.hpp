@@ -31,7 +31,6 @@ public:
     void setFollowers(Profile *followMe);
     void setFollowing(Profile *toFollow, Socket sock);
     bool followingAlreadyExists(Profile myUser, string toFollowUserName);
-
     bool isFollowing(Profile *toFollow);
 
 };

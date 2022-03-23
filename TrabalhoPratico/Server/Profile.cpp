@@ -25,7 +25,6 @@ void Profile::setFollowers(Profile *followMe) {
 
     this->followers.push_back(*followMe);
 
-    cout << "N3 " << this->followers.size() << endl;
 
 }
 

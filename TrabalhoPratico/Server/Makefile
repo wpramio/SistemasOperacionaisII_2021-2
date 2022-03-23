@@ -1,5 +1,5 @@
 EXECUTABLE=app_server
-CXX=g++
+CXX=g++ -g
 CXXFLAGS=-Wall -std=c++11 -pthread
 SRCS=$(wildcard *.cpp)
 OBJS=$(SRCS:.cpp=.o)
