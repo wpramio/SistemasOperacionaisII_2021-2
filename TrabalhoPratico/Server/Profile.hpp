@@ -27,7 +27,8 @@ public:
     string getUserName();
     int getUuid();
     int getActiveSessions();
-    bool setActiveSession();
+    void increaseActiveSessions();
+    void decreaseActiveSessions();
     void setFollowers(Profile *followMe);
     void setFollowing(Profile *toFollow, Socket sock);
     bool followingAlreadyExists(Profile myUser, string toFollowUserName);

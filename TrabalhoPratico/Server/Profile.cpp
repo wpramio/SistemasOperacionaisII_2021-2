@@ -49,21 +49,17 @@ int Profile::getActiveSessions() {
     return this->activeSessions;
 }
 
-//Retorna true se é possivel criar uma nova sessao
-//False, caso contrario
+// Incrementa em 1 o numero de sessoes ativas
 
-bool Profile::setActiveSession() {
+void Profile::increaseActiveSessions() {
 
-    if(getActiveSessions() < 2) {
+    this->activeSessions++;
 
-        this->activeSessions++;
+}
 
-        return true;
-    
-    }
-    cout << endl << this->activeSessions << endl;
+void Profile::decreaseActiveSessions() {
 
-    return false;
+    this->activeSessions--;
 
 }
 
