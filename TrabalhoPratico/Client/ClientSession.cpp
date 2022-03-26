@@ -9,13 +9,13 @@ ClientSession::ClientSession(string profile, string ip, string port) {
     string sessionMsg = "SESSION:" + profile;
 
     if(client.sendMessage(sessionMsg) < 0) {
-        cout << "!> ERROR - Session request" << endl;
+        cout << "!> ERROR - Session request not sent" << endl;
         exit(1);
     }
 
 
     if(client.receiveMessage() < 0) {
-        cout << "!> ERROR - Server response" << endl;
+        cout << "!> ERROR - Server response not received" << endl;
         exit(1);
     }
 
@@ -23,16 +23,16 @@ ClientSession::ClientSession(string profile, string ip, string port) {
     //Pega o profile que iniciou a sessao
     string sessionResponse = client.getMessage();   
 
-    cout << endl << sessionResponse << endl;
+    cout << endl << "Server response: " << sessionResponse << endl;
 
     if(sessionResponse == "There are already 2 active sessions") {
-        cout << "!> ERROR - Too many sessions at the same time";
+        cout << "!> ERROR - Too many sessions at the same time" << endl;
         exit(1);
     }
 
     //Mais condiçoes
 
-    cout << ">>SUCCESS - Session started" << endl;
+    cout << ">> SUCCESS - Session started" << endl;
     
     //Inicia a sessao
     thread sessionThread(session, profile, &client);

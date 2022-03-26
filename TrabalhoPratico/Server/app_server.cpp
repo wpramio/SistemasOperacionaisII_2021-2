@@ -19,9 +19,6 @@ int main() {
         //Pega o username
         string content = message.substr(message.find(":") + 1);
 
-         
-        int clientUuid;
-
         if(command == "SESSION") {
 
             Session session;
@@ -49,6 +46,5 @@ int main() {
 
     }
     
-
     return 0;
 }

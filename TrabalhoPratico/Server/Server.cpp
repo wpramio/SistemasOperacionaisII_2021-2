@@ -76,13 +76,14 @@ int Server::setNewClient(string username) {
     
     this->clients.insert(pair<int, Profile>(newUuid, newProfile));
 
+    cout << "set new client: " << username << endl;
+
+    // DEBUG
+    cout << "current clients:" << endl;
     for(auto it = this->clients.begin(); it != this->clients.end(); ++it) {
 
-        cout << it->second.getUserName();
-        cout << endl;
+        cout << "- " + it->second.getUserName() + " (uuid " + std::to_string(it->first) + ")" << endl;
     }
-
-    cout << "set new client" << endl;
 
     return newUuid;
 
