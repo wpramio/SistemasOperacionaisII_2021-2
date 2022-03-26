@@ -43,7 +43,7 @@ public:
     string receiveMessage();
     void sendMessage(string message); 
     int setNewClient(string username);
-    void startClientSession(int clientUuid);
+    void registerNewClientSession(int clientUuid);
     bool clientAlreadyExists(string username);
     int getProfileUuid(string username);
     Profile* getProfile(int uuid);

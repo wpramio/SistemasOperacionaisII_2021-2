@@ -109,10 +109,14 @@ bool Server::clientAlreadyExists(string username) {
 
 }
 
-void Server::startClientSession(int clientUuid) {
+void Server::registerNewClientSession(int clientUuid) {
 
     auto item = clients.find(clientUuid);
-    item->second.setActiveSession();
+    item->second.increaseActiveSessions();
+
+    // DEBUG
+    string active_sessions = std::to_string(item->second.getActiveSessions());
+    cout << "Active sessions for " + item->second.getUserName() + ": " + active_sessions << endl;
     
 }
 

@@ -15,28 +15,23 @@ void Session::start(Server *server, string command, string content) {
             clientUuid = server->getProfileUuid(content);
             auto client = server->getProfile(clientUuid);
 
-            //Tenta iniciar a sessao
-            //Incrementa seções ativas
-            if(!client->setActiveSession()) {
+            // Checa se pode criar uma nova sessao
+            if(client->getActiveSessions() >= 2 ) {
                 
-                cout << "There are already 2 active sessions" << endl;
+                cout << "Session creation error: There are already 2 active sessions for " + client->getUserName() << endl;
                 //Avisa que não é possivel iniciar uma nova sessao
                 server->sendMessage("There are already 2 active sessions");
                 return;
             
             }
-            //Inicia uma nova sessao
-            server->startClientSession(clientUuid);
-            server->sendMessage("Logged in");
         
-        }else {
-
+        } else {
             
+            // ainda nao esta presente, insere um novo cliente
             clientUuid = server->setNewClient(content);
 
-            server->startClientSession(clientUuid);
-
-            
-            server->sendMessage("Logged in");
         }
+
+        server->registerNewClientSession(clientUuid);
+        server->sendMessage("Logged in");
 }
