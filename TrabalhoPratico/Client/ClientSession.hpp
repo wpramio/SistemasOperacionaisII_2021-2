@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#define TWEETMAX 280
+#define TWEETMAX 128
 #include <thread>
 #include "Client.hpp"
 
