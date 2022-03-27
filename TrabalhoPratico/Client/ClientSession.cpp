@@ -119,9 +119,9 @@ void ClientSession::session(string profile, Client *client) {
         
         }else if (command == "SEND") {
 
-            if(content.length() > TWEETMAX) {
+            if(content.length() > MSG_MAX_LEN) {
 
-                cout << "!> ERROR - Max tweet size is 280" << endl;
+                cout << "!> ERROR - Message max size is " << std::to_string(MSG_MAX_LEN) << endl;
                 continue;
 
             }
