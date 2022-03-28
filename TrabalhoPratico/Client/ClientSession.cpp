@@ -129,7 +129,14 @@ void ClientSession::session(string profile, Client *client) {
 
             //Send to server
 
-            
+        }else if(command == "EXIT"){
+
+            client->sendMessage("EXIT:" + profile);
+
+            cout << "!> Leaving..." << endl;
+
+            exit(0);
+
         }else {
 
             cout << "!> ERROR - Invalid command" << endl;
