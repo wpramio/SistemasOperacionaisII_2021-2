@@ -38,7 +38,23 @@ int main() {
             follow.start(&server, myUser, toFollow, sock);
 
 
+
+
+
+
         }else if(command == "SEND") {
+
+        }else if(command == "EXIT") {
+
+            int clientUuid;
+            clientUuid = server.getProfileUuid(content);
+            auto client = server.getProfile(clientUuid);
+
+            cout << "To decrease " << client->getUserName() << endl;
+
+            client->decreaseActiveSessions();
+
+        }else {
 
         }
 
