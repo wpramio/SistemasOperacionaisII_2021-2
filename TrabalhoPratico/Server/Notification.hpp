@@ -9,17 +9,17 @@ class Notification {
 
 private:
 
-    int uuid;
-    int timestamp;
+    string user;
+    string timestamp;
     int pending;
     string message;
 
 
 public:
 
-    Notification(int uuid, int timestamp, string message);
-    int getUuid();
-    int getTimestamp();
+    Notification(string user, int timestamp, string message);
+    string getUser();
+    string getTimestamp();
     string getMessage();
     int getPending();
     void incrementPending();

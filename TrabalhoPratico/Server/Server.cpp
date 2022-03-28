@@ -38,6 +38,18 @@ Server::Server() {
 
 }   
 
+string Server::getDateTime() {
+    return  ctime(&this->timestamp);
+}
+
+void Server::setReceivedByServer(Notification tweetNotify) {
+    this->receivedByServer.push(tweetNotify);
+}
+
+void Server::setToBeSent(Notification tweetNotify) {
+    this->toBeSent.push(tweetNotify);
+}
+
 string Server::receiveMessage() {
     
     char buffer[MAXLINE];
