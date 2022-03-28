@@ -39,10 +39,15 @@ int main() {
 
 
 
-
-
-
         }else if(command == "SEND") {
+
+
+
+            string myUser = content.substr(0, content.find("::"));
+            string tweet = content.substr(content.find("::") + 2);
+
+            //Constroi notificacao e guarda no server
+            server.sendMessage("Tweet posted");
 
         }else if(command == "EXIT") {
 
