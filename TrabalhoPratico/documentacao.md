@@ -21,4 +21,5 @@
 - [x] Tweet só pode ter no máximo 128 caracteres
 - [ ] Perfil que segue outro que postou tweet recebe o tweet
 - [ ] Uma thread para cada cliente no servidor
+- [ ] Perfil deve ler as notificações da estrutura de dados de tweets do servidor
 
