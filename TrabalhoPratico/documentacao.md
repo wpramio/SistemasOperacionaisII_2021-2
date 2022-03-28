@@ -12,7 +12,7 @@
 - [x] Server abre socket e espera conexões de Clientes
 - [x] Cliente consegue conectar ao socket do Server
 - [x] Cliente só pode ter 2 conexões simultâneas com o Server
-- [ ] Remover cliente da lista de clientes do Server quando sessão termina
+- [x] Decrementa o número de sessões quando o cliente executar o comando EXIT
 - [x] Perfil pode seguir outro perfil com comando FOLLOW
 - [x] Perfil não consegue seguir a si mesmo
 - [x] Perfil não consegue seguir outro Perfil que já segue ou que não existe
@@ -20,4 +20,5 @@
 - [x] Perfil consegue postar tweet com comando SEND
 - [x] Tweet só pode ter no máximo 128 caracteres
 - [ ] Perfil que segue outro que postou tweet recebe o tweet
+- [ ] Uma thread para cada cliente no servidor
 
