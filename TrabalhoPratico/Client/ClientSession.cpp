@@ -58,7 +58,7 @@ void ClientSession::session(string profile, Client *client) {
 
         //Pega o comando
         string command = message.substr(0, message.find(" "));
-        //Pega a instrução do comando
+        //Pega o conteudo do comando
         string content = message.substr(message.find(" ") + 1, message.length());
 
 
@@ -77,12 +77,6 @@ void ClientSession::session(string profile, Client *client) {
                 continue;
 
             }
-
-            //Send to server
-
-            //Inicializa sessao no servidor
-
-            //comando:prefil::perfil pra seguir
 
             string followMsg = "FOLLOW:" + profile + "::" + content;
 
@@ -105,7 +99,6 @@ void ClientSession::session(string profile, Client *client) {
                 continue;
             }
 
-            cout << "!!! " << followResponse << endl;
 
             if(followResponse == "You already follows this profile") {
                 cout << "!> ERROR - You already follows this profile" << endl;
@@ -126,8 +119,21 @@ void ClientSession::session(string profile, Client *client) {
 
             }
 
+            string tweet = "SEND:" + profile + "::" + content;
 
             //Send to server
+            if(client->sendMessage(tweet) < 0) {
+                cout << "!> ERROR - Send Tweet " << endl;
+                continue;
+            }
+
+            if(client->receiveMessage() < 0) {
+                cout << "!> SERVER ERROR - Server response" << endl;
+                exit(1);
+            }
+
+            cout << "!> SUCESS - " + client->getMessage() << endl;
+
 
         }else if(command == "EXIT"){
 

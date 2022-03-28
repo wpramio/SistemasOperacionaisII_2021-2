@@ -9,12 +9,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <mutex>
-
 #include <map>
+#include <queue>
 
 
 #include "Profile.hpp"
 #include "Socket.hpp"
+#include "Notification.hpp"
 
 #define PORT 8888
 #define MAXLINE 1024
@@ -32,8 +33,15 @@ private:
     socklen_t len; 
     int lastUuid;
     
+
+    //Perfis cadastrador no servidor
     map<int, Profile> clients;
 
+    //Notificacoes recebidas pelo servidor
+    queue<Notification> receiveByServer;
+
+    //Notificações restantes a serem enviadas
+    queue<Notification> toBeSent;
 
 public:
 
