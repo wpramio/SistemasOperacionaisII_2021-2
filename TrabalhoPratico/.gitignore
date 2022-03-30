@@ -1,4 +1,5 @@
 .history/
+.vscode/
 
 Client/app_client
 Server/app_server
