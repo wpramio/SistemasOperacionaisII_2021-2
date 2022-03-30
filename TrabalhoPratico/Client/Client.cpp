@@ -36,6 +36,8 @@ int Client::sendMessage(string message) {
         0, (const struct sockaddr *)&this->serverAddr,
         sizeof(this->serverAddr));
 
+    // DEBUG
+    LOG(DEBUG) << "sendMessage do Client com msg: " << message;
 
     return sendtoReturn;
 
@@ -58,6 +60,8 @@ int Client::receiveMessage() {
     buffer[receiveLen] = '\0';
 
     this->message = buffer;
+
+    LOG(DEBUG) << "receiveMessage do Client recebeu: " << buffer;
 
     return receiveLen;
 

@@ -2,6 +2,7 @@
 #include "Session.hpp"
 #include "Follow.hpp"
 
+structlog LOGCFG = {};
 
 int main() {
 
