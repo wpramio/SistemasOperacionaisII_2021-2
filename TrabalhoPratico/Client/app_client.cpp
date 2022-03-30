@@ -3,7 +3,9 @@
 #include "Validations.hpp"
 #include "ClientSession.hpp"
 #include <csignal>
+#include "../shared/Logger.hpp"
 
+structlog LOGCFG = {};
 
 void handleCtrlC(int signum) {
     cout << endl << "Caught Ctrl+C signal, ending client session..." << endl;

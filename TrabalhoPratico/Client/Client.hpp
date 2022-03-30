@@ -3,6 +3,7 @@
 #include <iostream>
 #include <arpa/inet.h>
 #include <mutex>
+#include "../shared/Logger.hpp"
 
 #define MAXLINE 1024
 
