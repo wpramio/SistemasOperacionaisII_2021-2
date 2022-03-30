@@ -15,6 +15,7 @@
 
 #include "Profile.hpp"
 #include "Notification.hpp"
+#include "CommManager.hpp"
 
 #define PORT 8888
 #define MAXLINE 1024
@@ -32,7 +33,8 @@ private:
     socklen_t len; 
     int lastUuid;
     std::time_t timestamp;
-    
+
+    CommManager* commManager;
 
     //Perfis cadastrador no servidor
     map<int, Profile> clients;
