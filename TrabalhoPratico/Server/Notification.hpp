@@ -17,7 +17,7 @@ private:
 
 public:
 
-    Notification(string user, int timestamp, string message);
+    Notification(string user, string timestamp, string message);
     string getUser();
     string getTimestamp();
     string getMessage();

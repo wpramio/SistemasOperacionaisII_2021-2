@@ -1,6 +1,6 @@
 #include "Notification.hpp"
 
-Notification::Notification(string user, int timestamp, string message) {
+Notification::Notification(string user, string timestamp, string message) {
 
     this->user = user;
     this->timestamp = timestamp;
