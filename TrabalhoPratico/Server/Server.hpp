@@ -32,13 +32,14 @@ private:
     struct sockaddr_in clientAddr;
     socklen_t len; 
     int lastUuid;
+    std::time_t timestamp;
     
 
     //Perfis cadastrador no servidor
     map<int, Profile> clients;
 
     //Notificacoes recebidas pelo servidor
-    queue<Notification> receiveByServer;
+    queue<Notification> receivedByServer;
 
     //Notificações restantes a serem enviadas
     queue<Notification> toBeSent;
@@ -56,5 +57,8 @@ public:
     int getProfileUuid(string username);
     Profile* getProfile(int uuid);
     Socket getConnection();
+    string getDateTime();
+    void setReceivedByServer(Notification tweetNotify);
+    void setToBeSent(Notification tweetNotify);
 
 };

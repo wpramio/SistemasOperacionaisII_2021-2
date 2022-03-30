@@ -1,19 +1,19 @@
 #include "Notification.hpp"
 
-Notification::Notification(int uuid, int timestamp, string message) {
+Notification::Notification(string user, int timestamp, string message) {
 
-    this->uuid = uuid;
+    this->user = user;
     this->timestamp = timestamp;
     this->message = message;
     this->pending = 0;
 
 }
 
-int Notification::getUuid() {
-    return this->uuid;
+string Notification::getUser() {
+    return this->user;
 }
 
-int Notification::getTimestamp() {
+string Notification::getTimestamp() {
     return this->timestamp;
 }
 

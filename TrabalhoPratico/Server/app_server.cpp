@@ -49,6 +49,12 @@ int main() {
             //Constroi notificacao e guarda no server
             server.sendMessage("Tweet posted");
 
+
+            //Arrumar
+           // Notification tweetNotify(myUser, server.getDateTime(), tweet);
+
+            
+
         }else if(command == "EXIT") {
 
             int clientUuid;
@@ -62,8 +68,6 @@ int main() {
         }else {
 
         }
-
-
 
     }
     
