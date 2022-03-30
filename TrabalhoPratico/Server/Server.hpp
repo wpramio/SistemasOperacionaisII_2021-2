@@ -14,7 +14,6 @@
 
 
 #include "Profile.hpp"
-#include "Socket.hpp"
 #include "Notification.hpp"
 
 #define PORT 8888
@@ -56,7 +55,6 @@ public:
     bool clientAlreadyExists(string username);
     int getProfileUuid(string username);
     Profile* getProfile(int uuid);
-    Socket getConnection();
     string getDateTime();
     void setReceivedByServer(Notification tweetNotify);
     void setToBeSent(Notification tweetNotify);

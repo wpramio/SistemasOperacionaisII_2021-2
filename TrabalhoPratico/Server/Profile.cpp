@@ -28,20 +28,16 @@ void Profile::setFollowers(Profile *followMe) {
 
 }
 
-void Profile::setFollowing(Profile *toFollow, Socket sock) {
+void Profile::setFollowing(Profile *toFollow) {
 
-    //Testar se já não esta seguindo
-    cout << " N " << this->following.size() << endl;
-
-    if(this->isFollowing(toFollow)) {
-        sock.sendMessage("You already follows this profile");
-        return;
-    }
+    // DEBUG
+    cout << " tam de Following antes " << this->following.size() << endl;
 
     this->following.push_back(*toFollow);
-    cout << " N2 " << this->following.size() << endl;
 
-    sock.sendMessage("Following " + toFollow->getUserName());
+    // DEBUG
+    cout << " tam de Following depois " << this->following.size() << endl;
+
 }
 
 int Profile::getActiveSessions() {
@@ -60,23 +56,6 @@ void Profile::increaseActiveSessions() {
 void Profile::decreaseActiveSessions() {
 
     this->activeSessions--;
-
-}
-
-bool Profile::followingAlreadyExists(Profile myUser, string toFollowUserName) {
-
-    //Verifica se o usuario já esta registrado no servidor
-    for (auto user = this->following.begin(); user != this->following.end(); ++user) {
-        
-        cout << user->getUserName() << endl;
-        if(user->getUserName() == toFollowUserName) {
-            return true;
-        }
-
-    }
-
-    return false;
-
 
 }
 

@@ -1,5 +1,4 @@
 #include "Server.hpp"
-#include "Socket.hpp"
 #include "Session.hpp"
 #include "Follow.hpp"
 
@@ -12,8 +11,6 @@ int main() {
     while(true) {
 
         string message = server.receiveMessage();
-        //Pega o socket que enviou a mensagem
-        Socket sock = server.getConnection();
         //Pega o comando
         string command = message.substr(0, message.find(":"));
         //Pega o username
@@ -35,7 +32,7 @@ int main() {
 
             cout << "SEGUIR " << myUser << " " << toFollow << endl;
             
-            follow.start(&server, myUser, toFollow, sock);
+            follow.start(&server, myUser, toFollow);
 
 
 

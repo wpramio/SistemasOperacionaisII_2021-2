@@ -3,8 +3,6 @@
 #include <string>
 #include <list>
 
-#include "Socket.hpp"
-
 using namespace std;
 
 
@@ -30,8 +28,7 @@ public:
     void increaseActiveSessions();
     void decreaseActiveSessions();
     void setFollowers(Profile *followMe);
-    void setFollowing(Profile *toFollow, Socket sock);
-    bool followingAlreadyExists(Profile myUser, string toFollowUserName);
+    void setFollowing(Profile *toFollow);
     bool isFollowing(Profile *toFollow);
 
 };

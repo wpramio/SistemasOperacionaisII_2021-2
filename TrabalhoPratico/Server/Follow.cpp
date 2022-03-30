@@ -2,7 +2,7 @@
 
 Follow::Follow() {}
 
-void Follow::start(Server *server, string myUser, string toFollow, Socket sock) {
+void Follow::start(Server *server, string myUser, string toFollow) {
 
     if(!server->clientAlreadyExists(toFollow)) {
 
@@ -18,11 +18,20 @@ void Follow::start(Server *server, string myUser, string toFollow, Socket sock) 
     Profile *myUserProf = server->getProfile(myUserUuid);
     Profile *toFollowProf = server->getProfile(toFollowUuid);
 
-    //Adiciona em seguindo
-    myUserProf->setFollowing(toFollowProf, sock);
+    // Testa se ja esta seguindo
+    if (myUserProf->isFollowing(toFollowProf)) {
 
-    //Adiciona em seguidor
+        server->sendMessage("You already follows this profile");
+        return;
+
+    }
+
+    //Adiciona na lista de Seguindo
+    myUserProf->setFollowing(toFollowProf);
+
+    //Adiciona na lista de Seguidores do alvo
     toFollowProf->setFollowers(myUserProf);
 
+    server->sendMessage("You are now following " + toFollow);
 
 }
