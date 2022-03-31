@@ -3,6 +3,7 @@
 #define MSG_MAX_LEN 128
 #include <thread>
 #include "Client.hpp"
+#include "CommManager.hpp"
 
 using namespace std;
 
@@ -14,9 +15,7 @@ public:
     ClientSession(string profile, string ip, string port);
     
     //Static for using in threads
-    static void session(string profile, Client *client) ;
-    static void feed(Client *client) ;
-
-    
+    static void session(string profile, CommManager *commManager) ;
+    static void feed(CommManager *commManager) ;
 
 };

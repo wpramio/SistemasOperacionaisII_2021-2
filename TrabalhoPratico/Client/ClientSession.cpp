@@ -3,30 +3,30 @@
 
 ClientSession::ClientSession(string profile, string ip, string port) {
 
-    Client client(ip, stoi(port));
+    CommManager commManager(ip, stoi(port));
 
     //Inicializa sessao no servidor
     string sessionMsg = "SESSION:" + profile;
 
-    if(client.sendMessage(sessionMsg) < 0) {
-        cout << "!> ERROR - Session request not sent" << endl;
+    if(commManager.sendMessage(sessionMsg) < 0) {
+        cerr << "!> ERROR - Session request not sent" << endl;
         exit(1);
     }
 
 
-    if(client.receiveMessage() < 0) {
-        cout << "!> ERROR - Server response not received" << endl;
+    if(commManager.receiveMessage() < 0) {
+        cerr << "!> ERROR - Server response not received" << endl;
         exit(1);
     }
 
     
     //Pega o profile que iniciou a sessao
-    string sessionResponse = client.getMessage();   
+    string sessionResponse = commManager.getMessage();   
 
     cout << endl << "Server response: " << sessionResponse << endl;
 
     if(sessionResponse == "There are already 2 active sessions") {
-        cout << "!> ERROR - Too many sessions at the same time" << endl;
+        cerr << "!> ERROR - Too many sessions at the same time" << endl;
         exit(1);
     }
 
@@ -35,8 +35,8 @@ ClientSession::ClientSession(string profile, string ip, string port) {
     cout << ">> SUCCESS - Session started" << endl;
     
     //Inicia a sessao
-    thread sessionThread(session, profile, &client);
-    thread feedThread(feed, &client);
+    thread sessionThread(session, profile, &commManager);
+    thread feedThread(feed, &commManager);
 
     //Linhas de execucao
     sessionThread.join();
@@ -45,7 +45,7 @@ ClientSession::ClientSession(string profile, string ip, string port) {
 }
 
 //Mudar esse nome
-void ClientSession::session(string profile, Client *client) {
+void ClientSession::session(string profile, CommManager *commManager) {
 
     cout << "Thread session" << endl;
 
@@ -80,18 +80,18 @@ void ClientSession::session(string profile, Client *client) {
 
             string followMsg = "FOLLOW:" + profile + "::" + content;
 
-            if(client->sendMessage(followMsg) < 0) {
+            if(commManager->sendMessage(followMsg) < 0) {
                 cout << "!> ERROR - Follow request" << endl;
                 continue;
             }
 
-            if(client->receiveMessage() < 0) {
+            if(commManager->receiveMessage() < 0) {
                 cout << "!> SERVER ERROR - Server response" << endl;
                 exit(1);
             }
 
             //Pega o profile que iniciou a sessao
-            string followResponse = client->getMessage();   
+            string followResponse = commManager->getMessage();   
 
             //PNF == FOLLOW ERROR
             if(followResponse == "Profile Not Found") {
@@ -122,22 +122,22 @@ void ClientSession::session(string profile, Client *client) {
             string tweet = "SEND:" + profile + "::" + content;
 
             //Send to server
-            if(client->sendMessage(tweet) < 0) {
+            if(commManager->sendMessage(tweet) < 0) {
                 cout << "!> ERROR - Send Tweet " << endl;
                 continue;
             }
 
-            if(client->receiveMessage() < 0) {
+            if(commManager->receiveMessage() < 0) {
                 cout << "!> SERVER ERROR - Server response" << endl;
                 exit(1);
             }
 
-            cout << "!> SUCESS - " + client->getMessage() << endl;
+            cout << "!> SUCCESS - " << commManager->getMessage() << endl;
 
 
         }else if(command == "EXIT"){
 
-            client->sendMessage("EXIT:" + profile);
+            commManager->sendMessage("EXIT:" + profile);
 
             cout << "!> Leaving..." << endl;
 
@@ -156,17 +156,17 @@ void ClientSession::session(string profile, Client *client) {
 }
 
 
-void ClientSession::feed(Client *client) {
+void ClientSession::feed(CommManager *commManager) {
     cout << "\nThread feed" << endl;
 
     while (true) {
         //std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-        if (client->nonBlockingReceiveMessage() < 0) {
+        if (commManager->nonBlockingReceiveMessage() < 0) {
             continue;
         }
 
-        string message = client->getMessage();
+        string message = commManager->getMessage();
         string commandStr = message.substr(0, message.find(","));
 
 
