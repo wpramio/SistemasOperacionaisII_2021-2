@@ -15,7 +15,7 @@ public:
     ClientSession(string profile, string ip, string port);
     
     //Static for using in threads
-    static void session(string profile, CommManager *commManager) ;
-    static void feed(CommManager *commManager) ;
+    static void session(string profile, string ip, int port) ;
+    static void feed(string profile, string ip, int port) ;
 
 };

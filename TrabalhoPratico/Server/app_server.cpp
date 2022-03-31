@@ -1,6 +1,4 @@
 #include "Server.hpp"
-#include "Session.hpp"
-#include "Follow.hpp"
 
 structlog LOGCFG = {};
 
@@ -15,55 +13,17 @@ int main() {
         //Pega o comando
         string command = message.substr(0, message.find(":"));
         //Pega o username
-        string content = message.substr(message.find(":") + 1);
+        string username = message.substr(message.find(":") + 1);
 
         if(command == "SESSION") {
 
-            Session session;
-            session.start(&server, command, content);
+            if (server.canStartSession(username)) {
+                server.incrementNewSessionPort();
+                string newPort = to_string(server.getNewSessionPort());
+                server.sendMessage("Logged in, new port is::" + newPort);
 
-            continue;
-
-
-        }else if(command == "FOLLOW") {
-
-            Follow follow;
-            string myUser = content.substr(0, content.find("::"));
-            string toFollow = content.substr(content.find("::") + 2);
-
-            cout << "SEGUIR " << myUser << " " << toFollow << endl;
-            
-            follow.start(&server, myUser, toFollow);
-
-
-
-        }else if(command == "SEND") {
-
-
-
-            string myUser = content.substr(0, content.find("::"));
-            string tweet = content.substr(content.find("::") + 2);
-
-            //Constroi notificacao e guarda no server
-            server.sendMessage("Tweet posted");
-
-
-            //Arrumar
-           // Notification tweetNotify(myUser, server.getDateTime(), tweet);
-
-            
-
-        }else if(command == "EXIT") {
-
-            int clientUuid;
-            clientUuid = server.getProfileUuid(content);
-            auto client = server.getProfile(clientUuid);
-
-            cout << "To decrease " << client->getUserName() << endl;
-
-            client->decreaseActiveSessions();
-
-        }else {
+                server.startSession(username);
+            }
 
         }
 

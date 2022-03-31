@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include "../shared/Logger.hpp"
 
 using namespace std;
 

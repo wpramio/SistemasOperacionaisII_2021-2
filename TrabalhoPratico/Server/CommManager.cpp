@@ -1,6 +1,5 @@
 #include "CommManager.hpp"
 
-std::mutex mtx;
 
 // Create a socket and bind it to 0.0.0.0
 CommManager::CommManager(int port) {
@@ -42,10 +41,8 @@ void CommManager::createSocket() {
 
 void CommManager::sendMessage(string message) {
 
-    mtx.lock();
     sendto(socketfd, message.c_str(), message.length(), 
         MSG_CONFIRM, (const struct sockaddr *) &this->clientAddr, this->clientSockLen);
-    mtx.unlock();
 
     LOG(DEBUG) << "sendMessage do Server com msg: " << message;
 
@@ -57,10 +54,8 @@ string CommManager::receiveMessage() {
 	char buffer[MAXLINE];
     int receiveLen;
 
-    mtx.lock();
     receiveLen = recvfrom(socketfd, (char *)buffer, MAXLINE, 
         0, (struct sockaddr *) &this->clientAddr,   &this->clientSockLen);
-    mtx.unlock();
 
     if(receiveLen < 0) {
         

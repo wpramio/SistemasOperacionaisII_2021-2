@@ -1,6 +1,6 @@
 #include "CommManager.hpp"
 
-std::mutex mtex;
+// std::mutex mtex;
 
 // Create a socket and set the server address
 CommManager::CommManager(string ip, int port) {
@@ -34,10 +34,10 @@ void CommManager::createSocket() {
 
 int CommManager::sendMessage(string message) {
 
-    mtex.lock();
+    // mtex.lock();
     int result = sendto(socketfd, message.c_str(), message.length(), 
         0, (const struct sockaddr *) &this->serverAddr, sizeof(this->serverAddr));
-    mtex.unlock();
+    // mtex.unlock();
 
     LOG(DEBUG) << "sendMessage do Client com msg: " << message;
 
@@ -50,10 +50,10 @@ int CommManager::receiveMessage() {
 
 	char buffer[MAXLINE];
 
-    mtex.lock();
+    // mtex.lock();
     int receiveLen = recvfrom(socketfd, (char *)buffer, MAXLINE, 
         0, (struct sockaddr *) &this->serverAddr,   &this->serverSockLen);
-    mtex.unlock();
+    // mtex.unlock();
 
     buffer[receiveLen] = '\0';
 
@@ -70,13 +70,13 @@ int CommManager::nonBlockingReceiveMessage() {
 	char buffer[MAXLINE];
     int len = sizeof(sockaddr_in);
 
-    mtex.lock();
+    // mtex.lock();
     int receiveLen = recvfrom(this->socketfd, buffer, MAXLINE, 
         MSG_DONTWAIT, (struct sockaddr *) &this->serverAddr, (socklen_t*) &len);
 
     bzero(buffer, MAXLINE);
 
-    mtex.unlock();
+    // mtex.unlock();
 
     this->message = buffer;
     

@@ -30,13 +30,11 @@ void Profile::setFollowers(Profile *followMe) {
 
 void Profile::setFollowing(Profile *toFollow) {
 
-    // DEBUG
-    cout << " tam de Following antes " << this->following.size() << endl;
+    LOG(DEBUG) << "tam de Following antes: " << this->following.size();
 
     this->following.push_back(*toFollow);
 
-    // DEBUG
-    cout << " tam de Following depois " << this->following.size() << endl;
+    LOG(DEBUG) << "tam de Following depois: " << this->following.size();
 
 }
 

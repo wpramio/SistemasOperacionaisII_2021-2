@@ -30,13 +30,15 @@ ClientSession::ClientSession(string profile, string ip, string port) {
         exit(1);
     }
 
+    string newPort = sessionResponse.substr(sessionResponse.find("::") + 2);
+
     //Mais condiçoes
 
     cout << ">> SUCCESS - Session started" << endl;
     
     //Inicia a sessao
-    thread sessionThread(session, profile, &commManager);
-    thread feedThread(feed, &commManager);
+    thread sessionThread(session, profile, ip, stoi(newPort));
+    thread feedThread(feed, profile, ip, stoi(newPort));
 
     //Linhas de execucao
     sessionThread.join();
@@ -45,7 +47,9 @@ ClientSession::ClientSession(string profile, string ip, string port) {
 }
 
 //Mudar esse nome
-void ClientSession::session(string profile, CommManager *commManager) {
+void ClientSession::session(string profile, string ip, int port) {
+
+    CommManager commManager(ip, port);
 
     cout << "Thread session" << endl;
 
@@ -80,18 +84,18 @@ void ClientSession::session(string profile, CommManager *commManager) {
 
             string followMsg = "FOLLOW:" + profile + "::" + content;
 
-            if(commManager->sendMessage(followMsg) < 0) {
+            if(commManager.sendMessage(followMsg) < 0) {
                 cout << "!> ERROR - Follow request" << endl;
                 continue;
             }
 
-            if(commManager->receiveMessage() < 0) {
+            if(commManager.receiveMessage() < 0) {
                 cout << "!> SERVER ERROR - Server response" << endl;
                 exit(1);
             }
 
             //Pega o profile que iniciou a sessao
-            string followResponse = commManager->getMessage();   
+            string followResponse = commManager.getMessage();   
 
             //PNF == FOLLOW ERROR
             if(followResponse == "Profile Not Found") {
@@ -100,8 +104,8 @@ void ClientSession::session(string profile, CommManager *commManager) {
             }
 
 
-            if(followResponse == "You already follows this profile") {
-                cout << "!> ERROR - You already follows this profile" << endl;
+            if(followResponse == "You already follow this profile") {
+                cout << "!> ERROR - You already follow this profile" << endl;
                 continue;
             }
 
@@ -122,22 +126,22 @@ void ClientSession::session(string profile, CommManager *commManager) {
             string tweet = "SEND:" + profile + "::" + content;
 
             //Send to server
-            if(commManager->sendMessage(tweet) < 0) {
+            if(commManager.sendMessage(tweet) < 0) {
                 cout << "!> ERROR - Send Tweet " << endl;
                 continue;
             }
 
-            if(commManager->receiveMessage() < 0) {
+            if(commManager.receiveMessage() < 0) {
                 cout << "!> SERVER ERROR - Server response" << endl;
                 exit(1);
             }
 
-            cout << "!> SUCCESS - " << commManager->getMessage() << endl;
+            cout << "!> SUCCESS - " << commManager.getMessage() << endl;
 
 
         }else if(command == "EXIT"){
 
-            commManager->sendMessage("EXIT:" + profile);
+            commManager.sendMessage("EXIT:" + profile);
 
             cout << "!> Leaving..." << endl;
 
@@ -156,17 +160,20 @@ void ClientSession::session(string profile, CommManager *commManager) {
 }
 
 
-void ClientSession::feed(CommManager *commManager) {
+void ClientSession::feed(string profile, string ip, int port) {
+
+    CommManager commManager(ip, port);
+
     cout << "\nThread feed" << endl;
 
     while (true) {
         //std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-        if (commManager->nonBlockingReceiveMessage() < 0) {
+        if (commManager.nonBlockingReceiveMessage() < 0) {
             continue;
         }
 
-        string message = commManager->getMessage();
+        string message = commManager.getMessage();
         string commandStr = message.substr(0, message.find(","));
 
 

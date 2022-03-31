@@ -36,7 +36,6 @@ int Client::sendMessage(string message) {
         0, (const struct sockaddr *)&this->serverAddr,
         sizeof(this->serverAddr));
 
-    // DEBUG
     LOG(DEBUG) << "sendMessage do Client com msg: " << message;
 
     return sendtoReturn;
