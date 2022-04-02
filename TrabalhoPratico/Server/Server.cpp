@@ -13,18 +13,6 @@ Server::Server() {
     cout << ">> SUCCESS - Server is up on PORT: " << MAIN_PORT << endl;
     cout << ">> STATUS - Awaiting for clients..." << endl;
 
-}   
-
-string Server::getDateTime() {
-    return  ctime(&this->timestamp);
-}
-
-void Server::setReceivedByServer(Notification tweetNotify) {
-    this->receivedByServer.push(tweetNotify);
-}
-
-void Server::setToBeSent(Notification tweetNotify) {
-    this->toBeSent.push(tweetNotify);
 }
 
 string Server::receiveMessage() {
@@ -152,8 +140,7 @@ bool Server::canStartSession(string username) {
 
     if (this->clientAlreadyExists(username)) {
             
-        int clientUuid = this->getProfileUuid(username);
-        auto client = this->getProfile(clientUuid);
+        auto client = this->getProfileByName(username);
 
         // Checa se ja atingiu o numero maximo de sessoes ativas
         if(client->getActiveSessions() >= 2 ) {
@@ -183,8 +170,12 @@ void Server::session(Server* server, string username) {
 
     cout << ">> New session thread created for " << username << ", listening on port " << server->getNewSessionPort() << endl;
 
-    // CRIACAO SOCKET DA THREAD DE SESSAO
+    // Gerenciador de comunicacao
     CommManager commManager(server->getNewSessionPort());
+    // Gerenciador de notificacoes
+    NotificationsManager notificationsManager;
+
+    Profile *myUserProf = server->getProfileByName(username);
 
     while(true) {
 
@@ -198,14 +189,12 @@ void Server::session(Server* server, string username) {
 
             // TODO: agrupar num Gerenciador de Perfis
 
-            string myUser = content.substr(0, content.find("::"));
             string toFollow = content.substr(content.find("::") + 2);
 
-            //Recupera os perfis
-            Profile *myUserProf = server->getProfileByName(myUser);
+            // Recupera o perfil
             Profile *toFollowProf = server->getProfileByName(toFollow);
 
-            LOG(DEBUG) << myUser << " quer SEGUIR " << toFollow;
+            LOG(DEBUG) << username << " quer SEGUIR " << toFollow;
 
             if (!server->clientAlreadyExists(toFollow)) {
 
@@ -231,27 +220,17 @@ void Server::session(Server* server, string username) {
 
         } else if (command == "SEND") {
 
-            string myUser = content.substr(0, content.find("::"));
             string tweet = content.substr(content.find("::") + 2);
 
             //Constroi notificacao e guarda no server
+            notificationsManager.registerReceivedNotification(myUserProf, tweet);
             commManager.sendMessage("Tweet posted");
-
-
-            //Arrumar
-           // Notification tweetNotify(myUser, server.getDateTime(), tweet);
-
-            
 
         } else if (command == "EXIT") {
 
-            int clientUuid;
-            clientUuid = server->getProfileUuid(content);
-            auto client = server->getProfile(clientUuid);
+            cout << "Ending session for " << username << endl;
 
-            cout << "To decrease " << client->getUserName() << endl;
-
-            client->decreaseActiveSessions();
+            myUserProf->decreaseActiveSessions();
 
         } else {
 

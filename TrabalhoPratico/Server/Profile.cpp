@@ -71,3 +71,35 @@ bool Profile::isFollowing(Profile *toFollow) {
     return false;
 
 }
+
+list<Profile> Profile::getFollowers() {
+    return this->followers;
+}
+
+int Profile::getFollowersSize() {
+    return this->followers.size();
+}
+
+queue<Notification> Profile::getReceivedByServer() {
+    return this->receivedByServer;
+}
+
+queue<Notification> Profile::getToBeSent() {
+    return this->toBeSent;
+}
+
+int Profile::getReceivedByServerSize() {
+    return this->receivedByServer.size();
+}
+
+int Profile::getToBeSentSize() {
+    return this->toBeSent.size();
+}
+
+void Profile::pushToReceivedByServer(Notification tweetNotify) {
+    this->receivedByServer.push(tweetNotify);
+}
+
+void Profile::pushToBeSent(Notification tweetNotify) {
+    this->toBeSent.push(tweetNotify);
+}

@@ -17,6 +17,7 @@
 #include "Profile.hpp"
 #include "Notification.hpp"
 #include "CommManager.hpp"
+#include "NotificationsManager.hpp"
 
 #define MAIN_PORT 8888
 #define NEW_SESSION_INITIAL_PORT 9000
@@ -29,19 +30,12 @@ class Server {
 private:
 
     int lastUuid;
-    std::time_t timestamp;
     int newSessionPort;
 
     CommManager* commManager;
 
     //Perfis cadastrados no servidor
     map<int, Profile> clients;
-
-    //Notificacoes recebidas pelo servidor
-    queue<Notification> receivedByServer;
-
-    //Notificações restantes a serem enviadas
-    queue<Notification> toBeSent;
 
 public:
 
@@ -56,16 +50,13 @@ public:
     int getProfileUuid(string username);
     Profile* getProfile(int uuid);
     Profile* getProfileByName(string username);
-    string getDateTime();
-    void setReceivedByServer(Notification tweetNotify);
-    void setToBeSent(Notification tweetNotify);
 
     int getNewSessionPort();
     void incrementNewSessionPort();
     bool canStartSession(string username);
     void startSession(string username);
 
-    //Static for using in threads
+    // static para usar em threads
     static void session(Server* server, string username);
 
 };
