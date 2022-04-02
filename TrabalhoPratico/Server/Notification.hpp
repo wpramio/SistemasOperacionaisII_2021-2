@@ -9,7 +9,7 @@ class Notification {
 
 private:
 
-    string user;
+    string username;
     string timestamp;
     int pending;
     string message;
@@ -17,12 +17,14 @@ private:
 
 public:
 
-    Notification(string user, string timestamp, string message);
-    string getUser();
+    Notification(string username, string timestamp, string message);
+    string getUsername();
     string getTimestamp();
     string getMessage();
     int getPending();
     void incrementPending();
     void decrementPending();
+    void setPending(int pend);
+    string print();
 
 };
