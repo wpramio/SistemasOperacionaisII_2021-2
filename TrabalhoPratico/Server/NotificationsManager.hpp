@@ -19,6 +19,7 @@ private:
 public:
 
     void registerReceivedNotification(Profile* profile, string message);
+    void pushNotificationToFollowers(Profile* profile, Notification* notification);
     string getDateTime();
 
 };

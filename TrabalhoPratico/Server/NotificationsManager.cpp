@@ -12,6 +12,17 @@ void NotificationsManager::registerReceivedNotification(Profile* profile, string
 
 }
 
+// Itera pela lista de seguidores do profile e adiciona a notification na
+// fila toBeSent de cada um
+void NotificationsManager::pushNotificationToFollowers(Profile* profile, Notification* notification) {
+
+    list<Profile> followers(profile->getFollowers());
+    for (auto user = followers.begin(); user != followers.end(); ++user) {
+        user->pushToBeSent(*notification);
+    }
+
+}
+
 string NotificationsManager::getDateTime() {
 
     time_t t = time(nullptr);
