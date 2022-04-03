@@ -17,14 +17,13 @@ int Profile::getUuid() {
 
 
 
-void Profile::setFollowers(Profile *followMe) {
+void Profile::pushToFollowers(Profile *followMe) {
 
-    if(followMe->isFollowing(this)) {
-        return;    
-    }
+    LOG(DEBUG) << username << " tam de Followers antes: " << this->followers.size();
 
     this->followers.push_back(*followMe);
 
+    LOG(DEBUG) << username << " tam de Followers depois: " << this->followers.size();
 
 }
 
@@ -102,4 +101,26 @@ void Profile::pushToReceivedByServer(Notification tweetNotify) {
 
 void Profile::pushToBeSent(Notification tweetNotify) {
     this->toBeSent.push(tweetNotify);
+}
+
+Notification* Profile::popReceivedByServer() {
+    Notification* popped = &this->receivedByServer.front();
+    this->receivedByServer.pop();
+
+    return popped;
+}
+
+Notification* Profile::popToBeSent() {
+    Notification* popped = &this->toBeSent.front();
+    this->toBeSent.pop();
+
+    return popped;
+}
+
+void Profile::printToBeSent() {
+
+    LOG(DEBUG) << "Bordas do toBeSent do user " << username;
+    LOG(DEBUG) << "inicio: " << toBeSent.front().print();
+    LOG(DEBUG) << "fim: " << toBeSent.back().print();
+
 }

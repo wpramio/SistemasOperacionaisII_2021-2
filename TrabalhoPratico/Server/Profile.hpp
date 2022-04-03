@@ -38,7 +38,7 @@ public:
     int getActiveSessions();
     void increaseActiveSessions();
     void decreaseActiveSessions();
-    void setFollowers(Profile *followMe);
+    void pushToFollowers(Profile *followMe);
     void setFollowing(Profile *toFollow);
     bool isFollowing(Profile *toFollow);
     list<Profile> getFollowers();
@@ -50,5 +50,8 @@ public:
     int getToBeSentSize();
     void pushToReceivedByServer(Notification tweetNotify);
     void pushToBeSent(Notification tweetNotify);
+    Notification* popReceivedByServer();
+    Notification* popToBeSent();
+    void printToBeSent();
 
 };

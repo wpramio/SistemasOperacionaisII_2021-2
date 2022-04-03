@@ -212,7 +212,7 @@ void Server::session(Server* server, string username) {
                 myUserProf->setFollowing(toFollowProf);
 
                 //Adiciona na lista de Seguidores do alvo
-                toFollowProf->setFollowers(myUserProf);
+                toFollowProf->pushToFollowers(myUserProf);
 
                 commManager.sendMessage("You are now following " + toFollow);
 
