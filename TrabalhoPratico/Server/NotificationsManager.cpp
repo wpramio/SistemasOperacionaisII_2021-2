@@ -7,6 +7,8 @@ void NotificationsManager::registerReceivedNotification(Profile* profile, string
 
     profile->pushToReceivedByServer(newNotification);
 
+    pushNotificationToFollowers(profile, &newNotification);
+
     cout << "Notification registered:" << endl;
     cout << newNotification.print() << endl;
 
@@ -16,9 +18,10 @@ void NotificationsManager::registerReceivedNotification(Profile* profile, string
 // fila toBeSent de cada um
 void NotificationsManager::pushNotificationToFollowers(Profile* profile, Notification* notification) {
 
-    list<Profile> followers(profile->getFollowers());
-    for (auto user = followers.begin(); user != followers.end(); ++user) {
-        user->pushToBeSent(*notification);
+    list<Profile> followers = profile->getFollowers();
+    for (list<Profile>::iterator prof = followers.begin(); prof != followers.end(); ++prof) {
+        prof->pushToBeSent(*notification);
+        prof->printToBeSent();
     }
 
 }
