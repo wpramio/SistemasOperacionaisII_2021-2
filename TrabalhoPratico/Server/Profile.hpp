@@ -18,7 +18,6 @@ private:
     string username;
 
     list<Profile> followers;
-    list<Profile> following;
 
     // Notificacoes recebidas a partir desse Profile 
     queue<Notification> receivedByServer;
@@ -39,8 +38,7 @@ public:
     void increaseActiveSessions();
     void decreaseActiveSessions();
     void pushToFollowers(Profile *followMe);
-    void setFollowing(Profile *toFollow);
-    bool isFollowing(Profile *toFollow);
+    bool isFollowedBy(Profile *profile);
     list<Profile> getFollowers();
     int getFollowersSize();
 

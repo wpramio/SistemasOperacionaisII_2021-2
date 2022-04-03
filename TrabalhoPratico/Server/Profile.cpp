@@ -27,16 +27,6 @@ void Profile::pushToFollowers(Profile *followMe) {
 
 }
 
-void Profile::setFollowing(Profile *toFollow) {
-
-    LOG(DEBUG) << "tam de Following antes: " << this->following.size();
-
-    this->following.push_back(*toFollow);
-
-    LOG(DEBUG) << "tam de Following depois: " << this->following.size();
-
-}
-
 int Profile::getActiveSessions() {
 
     return this->activeSessions;
@@ -56,12 +46,11 @@ void Profile::decreaseActiveSessions() {
 
 }
 
-bool Profile::isFollowing(Profile *toFollow) {
+bool Profile::isFollowedBy(Profile *profile) {
 
+    for (auto user = followers.begin(); user != followers.end(); ++user) {
 
-    for (auto user = this->following.begin(); user != this->following.end(); ++user) {
-
-        if(user->getUserName() == toFollow->getUserName()) {
+        if(user->getUserName() == profile->getUserName()) {
             return true;
         }
 

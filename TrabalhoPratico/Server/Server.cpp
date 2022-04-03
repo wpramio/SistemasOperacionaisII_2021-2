@@ -202,14 +202,11 @@ void Server::session(Server* server, string username) {
                 commManager.sendMessage("Profile Not Found");
 
             // Testa se ja esta seguindo
-            } else if (myUserProf->isFollowing(toFollowProf)) {
+            } else if (toFollowProf->isFollowedBy(myUserProf)) {
 
                 commManager.sendMessage("You already follow this profile");
 
             } else {
-
-                //Adiciona na lista de Seguindo
-                myUserProf->setFollowing(toFollowProf);
 
                 //Adiciona na lista de Seguidores do alvo
                 toFollowProf->pushToFollowers(myUserProf);
