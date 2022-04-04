@@ -1,5 +1,5 @@
 #include "Server.hpp"
-#include "Profile.hpp"
+#include "Session.hpp"
 
 // std::mutex mtx;
 
@@ -155,87 +155,20 @@ bool Server::canStartSession(string username) {
 
 }
 
+// Cria as threads que vão cuidar individualmente da sessão de cada usuário
 void Server::startSession(string username) {
 
     int clientUuid = this->clientAlreadyExists(username) ? this->getProfileUuid(username) : this->setNewClient(username);
 
     this->registerNewClientSession(clientUuid);
+    Profile *myUserProf = this->getProfileByName(username);
 
-    thread sessionThread(session, this, username);
-    sessionThread.detach();
+    Session userSession(this->getNewSessionPort(), myUserProf);
 
-}
+    thread receiveMessagesThread(Session::messagesListener, &userSession, this);
+    thread watchToBeSentThread(Session::notificationsToSendWatcher, &userSession);
 
-void Server::session(Server* server, string username) {
-
-    cout << ">> New session thread created for " << username << ", listening on port " << server->getNewSessionPort() << endl;
-
-    // Gerenciador de comunicacao
-    CommManager commManager(server->getNewSessionPort());
-    // Gerenciador de notificacoes
-    NotificationsManager notificationsManager;
-
-    Profile *myUserProf = server->getProfileByName(username);
-
-    while(true) {
-
-        string message = commManager.receiveMessage();
-        //Pega o comando
-        string command = message.substr(0, message.find(":"));
-        //Pega o username
-        string content = message.substr(message.find(":") + 1);
-
-        if (command == "FOLLOW") {
-
-            // TODO: agrupar num Gerenciador de Perfis
-
-            string toFollow = content.substr(content.find("::") + 2);
-
-            // Recupera o perfil
-            Profile *toFollowProf = server->getProfileByName(toFollow);
-
-            LOG(DEBUG) << username << " quer SEGUIR " << toFollow;
-
-            if (!server->clientAlreadyExists(toFollow)) {
-
-                // perfil nao encontrado
-                commManager.sendMessage("Profile Not Found");
-
-            // Testa se ja esta seguindo
-            } else if (toFollowProf->isFollowedBy(myUserProf)) {
-
-                commManager.sendMessage("You already follow this profile");
-
-            } else {
-
-                //Adiciona na lista de Seguidores do alvo
-                toFollowProf->pushToFollowers(myUserProf);
-
-                commManager.sendMessage("You are now following " + toFollow);
-
-            }
-
-        } else if (command == "SEND") {
-
-            string tweet = content.substr(content.find("::") + 2);
-
-            //Constroi notificacao e guarda no server
-            notificationsManager.registerReceivedNotification(myUserProf, tweet);
-            commManager.sendMessage("Tweet posted");
-
-        } else if (command == "EXIT") {
-
-            cout << "Ending session for " << username << endl;
-
-            myUserProf->decreaseActiveSessions();
-
-        } else {
-
-            cout << "Error - Invalid command" << endl;
-            commManager.sendMessage("Invalid command");
-            continue;
-
-        }
-    }
+    receiveMessagesThread.detach();
+    watchToBeSentThread.detach();
 
 }

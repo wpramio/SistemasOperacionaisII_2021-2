@@ -56,7 +56,4 @@ public:
     bool canStartSession(string username);
     void startSession(string username);
 
-    // static para usar em threads
-    static void session(Server* server, string username);
-
 };
