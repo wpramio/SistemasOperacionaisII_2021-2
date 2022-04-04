@@ -163,10 +163,10 @@ void Server::startSession(string username) {
     this->registerNewClientSession(clientUuid);
     Profile *myUserProf = this->getProfileByName(username);
 
-    Session userSession(this->getNewSessionPort(), myUserProf);
+    Session* userSession = new Session(this->getNewSessionPort(), myUserProf);
 
-    thread receiveMessagesThread(Session::messagesListener, &userSession, this);
-    thread watchToBeSentThread(Session::notificationsToSendWatcher, &userSession);
+    thread receiveMessagesThread(Session::messagesListener, userSession, this);
+    thread watchToBeSentThread(Session::notificationsToSendWatcher, userSession);
 
     receiveMessagesThread.detach();
     watchToBeSentThread.detach();

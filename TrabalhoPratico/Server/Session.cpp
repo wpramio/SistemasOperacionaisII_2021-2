@@ -97,7 +97,7 @@ void Session::notificationsToSendWatcher(Session* session) {
             LOG(DEBUG) << "Notification detectada";
 
             Notification* notif = profile->popToBeSent();
-            session->commManager->sendMessage("New notification::" + notif->print());
+            session->commManager->sendMessage("notify::" + notif->print());
 
         };
 
