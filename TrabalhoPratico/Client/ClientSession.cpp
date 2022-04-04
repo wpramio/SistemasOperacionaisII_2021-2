@@ -4,6 +4,7 @@
 ClientSession::ClientSession(string profile, string ip, string port) {
 
     CommManager commManager(ip, stoi(port));
+    this->profile = profile;
 
     //Inicializa sessao no servidor
     string sessionMsg = "SESSION:" + profile;
@@ -31,32 +32,36 @@ ClientSession::ClientSession(string profile, string ip, string port) {
     }
 
     string newPort = sessionResponse.substr(sessionResponse.find("::") + 2);
+    this->commManager = new CommManager(ip, stoi(newPort));
 
     //Mais condiçoes
 
     cout << ">> SUCCESS - Session started" << endl;
     
-    //Inicia a sessao
-    thread sessionThread(session, profile, ip, stoi(newPort));
-    thread feedThread(feed, profile, ip, stoi(newPort));
+}
 
-    //Linhas de execucao
-    sessionThread.join();
-    feedThread.join();
+void ClientSession::startThreads() {
+
+    thread userInputThread(getUserInput, this);
+    thread serverResponsesThread(getServerResponses, this);
+
+    userInputThread.join();
+    serverResponsesThread.join();
 
 }
 
-//Mudar esse nome
-void ClientSession::session(string profile, string ip, int port) {
+void ClientSession::getUserInput(ClientSession* clientSession) {
 
-    CommManager commManager(ip, port);
+    auto commManager = clientSession->commManager;
+    string profile = clientSession->profile;
 
-    cout << "Thread session" << endl;
+    cout << "getUserInput Thread" << endl;
 
     string message;
 
     while(true) {
 
+        cout << "Enter your command:" << endl;
         cout << "-> ";
         getline(cin, message); 
 
@@ -66,16 +71,16 @@ void ClientSession::session(string profile, string ip, int port) {
         string content = message.substr(message.find(" ") + 1, message.length());
 
 
-        if(command == "FOLLOW") {
+        if (command == "FOLLOW") {
         
-            if(content.at(0) != '@') {
+            if (content.at(0) != '@') {
 
                 cout <<"!> ERROR - Profile must start with '@'" << endl;
                 continue;
 
             }
 
-            if(content == profile) {
+            if (content == profile) {
 
                 cout << "!> ERROR - You can't follow yourself" << endl;
                 continue;
@@ -84,37 +89,12 @@ void ClientSession::session(string profile, string ip, int port) {
 
             string followMsg = "FOLLOW:" + profile + "::" + content;
 
-            if(commManager.sendMessage(followMsg) < 0) {
+            if (commManager->sendMessage(followMsg) < 0) {
                 cout << "!> ERROR - Follow request" << endl;
                 continue;
             }
-
-            if(commManager.receiveMessage() < 0) {
-                cout << "!> SERVER ERROR - Server response" << endl;
-                exit(1);
-            }
-
-            //Pega o profile que iniciou a sessao
-            string followResponse = commManager.getMessage();   
-
-            //PNF == FOLLOW ERROR
-            if(followResponse == "Profile Not Found") {
-                cout << "!> ERROR - Profile not found" << endl;
-                continue;
-            }
-
-
-            if(followResponse == "You already follow this profile") {
-                cout << "!> ERROR - You already follow this profile" << endl;
-                continue;
-            }
-
-
-            cout << "SUCCESS - " << followResponse << endl;
-
         
-        
-        }else if (command == "SEND") {
+        } else if (command == "SEND") {
 
             if(content.length() > MSG_MAX_LEN) {
 
@@ -126,64 +106,60 @@ void ClientSession::session(string profile, string ip, int port) {
             string tweet = "SEND:" + profile + "::" + content;
 
             //Send to server
-            if(commManager.sendMessage(tweet) < 0) {
+            if(commManager->sendMessage(tweet) < 0) {
                 cout << "!> ERROR - Send Tweet " << endl;
                 continue;
             }
 
-            if(commManager.receiveMessage() < 0) {
-                cout << "!> SERVER ERROR - Server response" << endl;
-                exit(1);
-            }
+        } else if (command == "EXIT") {
 
-            cout << "!> SUCCESS - " << commManager.getMessage() << endl;
-
-
-        }else if(command == "EXIT"){
-
-            commManager.sendMessage("EXIT:" + profile);
+            commManager->sendMessage("EXIT:" + profile);
 
             cout << "!> Leaving..." << endl;
 
             exit(0);
 
-        }else {
+        } else {
 
             cout << "!> ERROR - Invalid command" << endl;
             continue;
 
         }
     
-
     }
 
 }
 
+void ClientSession::getServerResponses(ClientSession* clientSession) {
 
-void ClientSession::feed(string profile, string ip, int port) {
+    auto commManager = clientSession->commManager;
+    string profile = clientSession->profile;
 
-    CommManager commManager(ip, port);
+    cout << "getServerResponses Thread" << endl;
 
-    cout << "\nThread feed" << endl;
+    while(true) {
 
-    while (true) {
-        //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        if (commManager->receiveMessage() < 0) {
+            cout << "!> SERVER ERROR - Server response" << endl;
+            exit(1);
+        }
 
-        if (commManager.nonBlockingReceiveMessage() < 0) {
+        // Pega a mensagem enviada pelo server
+        string response = commManager->getMessage();   
+
+        // PNF == FOLLOW ERROR
+        if (response == "Profile Not Found") {
+            cout << "!> ERROR - Profile not found" << endl;
             continue;
         }
 
-        string message = commManager.getMessage();
-        string commandStr = message.substr(0, message.find(","));
-
-
-        if(message != "Profile Not Found") {
+        if (response == "You already follow this profile") {
+            cout << "!> ERROR - You already follow this profile" << endl;
             continue;
         }
 
-        cout << "MESSAGE FROM FEED - " << message << endl;
+        cout << "SUCCESS - " << response << endl;
+
     }
-//         if (commandStr != "notify") {
-//             continue;
-//         }
+
 }

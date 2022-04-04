@@ -39,4 +39,5 @@ int main(int argc, char *argv[]) {
     }
 
     ClientSession clientSession(profile, ip, portStr);
+    clientSession.startThreads();
 }

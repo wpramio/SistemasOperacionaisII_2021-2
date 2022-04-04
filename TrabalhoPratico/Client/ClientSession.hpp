@@ -9,13 +9,18 @@ using namespace std;
 
 class ClientSession {
 
+private:
+
+    CommManager* commManager;
+    string profile;
 
 public:
 
     ClientSession(string profile, string ip, string port);
+    void startThreads();
     
     //Static for using in threads
-    static void session(string profile, string ip, int port) ;
-    static void feed(string profile, string ip, int port) ;
+    static void getUserInput(ClientSession* clientSession);
+    static void getServerResponses(ClientSession* clientSession) ;
 
 };
