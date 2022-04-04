@@ -18,10 +18,10 @@ void NotificationsManager::registerReceivedNotification(Profile* profile, string
 // fila toBeSent de cada um
 void NotificationsManager::pushNotificationToFollowers(Profile* profile, Notification* notification) {
 
-    list<Profile> followers = profile->getFollowers();
-    for (list<Profile>::iterator prof = followers.begin(); prof != followers.end(); ++prof) {
-        prof->pushToBeSent(*notification);
-        prof->printToBeSent();
+    list<Profile*> followers = profile->getFollowers();
+    for (auto prof = followers.begin(); prof != followers.end(); ++prof) {
+        (*prof)->pushToBeSent(*notification);
+        (*prof)->printToBeSent();
     }
 
 }

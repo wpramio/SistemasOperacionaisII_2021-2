@@ -17,20 +17,20 @@ private:
     int uuid;
     string username;
 
-    list<Profile> followers;
+    list<Profile*> followers = {};
 
     // Notificacoes recebidas a partir desse Profile 
-    queue<Notification> receivedByServer;
+    queue<Notification> receivedByServer = {};
 
     // Notificações pendentes a serem enviadas a este Profile
-    queue<Notification> toBeSent;
+    queue<Notification> toBeSent = {};
 
     //Nao sei se isso ta certo
     int activeSessions;
 
 
 public: 
-    
+
     Profile(string username, int uuid);
     string getUserName();
     int getUuid();
@@ -39,7 +39,7 @@ public:
     void decreaseActiveSessions();
     void pushToFollowers(Profile *followMe);
     bool isFollowedBy(Profile *profile);
-    list<Profile> getFollowers();
+    list<Profile*> getFollowers();
     int getFollowersSize();
 
     queue<Notification> getReceivedByServer();

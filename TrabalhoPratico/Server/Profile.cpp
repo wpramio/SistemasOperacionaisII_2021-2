@@ -21,7 +21,7 @@ void Profile::pushToFollowers(Profile *followMe) {
 
     LOG(DEBUG) << username << " tam de Followers antes: " << this->followers.size();
 
-    this->followers.push_back(*followMe);
+    this->followers.push_back(followMe);
 
     LOG(DEBUG) << username << " tam de Followers depois: " << this->followers.size();
 
@@ -50,7 +50,8 @@ bool Profile::isFollowedBy(Profile *profile) {
 
     for (auto user = followers.begin(); user != followers.end(); ++user) {
 
-        if(user->getUserName() == profile->getUserName()) {
+        // testa se algum ponteiro da lista é igual ao ponteiro profile
+        if(*user == profile) {
             return true;
         }
 
@@ -60,7 +61,7 @@ bool Profile::isFollowedBy(Profile *profile) {
 
 }
 
-list<Profile> Profile::getFollowers() {
+list<Profile*> Profile::getFollowers() {
     return this->followers;
 }
 
@@ -111,5 +112,6 @@ void Profile::printToBeSent() {
     LOG(DEBUG) << "Bordas do toBeSent do user " << username;
     LOG(DEBUG) << "inicio: " << toBeSent.front().print();
     LOG(DEBUG) << "fim: " << toBeSent.back().print();
+    LOG(DEBUG) << "Tam do toBeSent: " << toBeSent.size();
 
 }
