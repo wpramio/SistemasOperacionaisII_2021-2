@@ -41,7 +41,7 @@ void CommManager::createSocket() {
 
 void CommManager::sendMessage(string message) {
 
-    sendto(socketfd, message.c_str(), message.length(), 
+    sendto(socketfd, message.c_str(), message.length() + 1, 
         MSG_CONFIRM, (const struct sockaddr *) &this->clientAddr, this->clientSockLen);
 
     LOG(DEBUG) << "sendMessage do Server com msg: " << message;

@@ -28,11 +28,9 @@ void NotificationsManager::pushNotificationToFollowers(Profile* profile, Notific
 
 string NotificationsManager::getDateTime() {
 
-    time_t t = time(nullptr);
-    char dateTime[100];
-    locale::global(locale("pt_BR.utf8"));
-    strftime(dateTime, sizeof(dateTime), "%c", localtime(&t));
+    time_t _tm =time(NULL );
+    struct tm * curtime = localtime ( &_tm );
 
-    return dateTime;
+    return asctime(curtime);
 
 }

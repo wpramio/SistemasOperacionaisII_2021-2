@@ -38,5 +38,9 @@ void Notification::setPending(int pend) {
 }
 
 string Notification::print() {
-    return username + " (" + timestamp + "): " + message;
+
+    time_t _tm =time(NULL );
+    struct tm * curtime = localtime ( &_tm );
+
+    return username + " " + asctime(curtime) + message;
 }
